@@ -49,7 +49,7 @@ var (
 	docsDefault = []string{
 		"rwx.gg 50500 https://gitlab.com/rwx.gg/README.git",
 		"freedoom-docs 50502 https://github.com/freedoom/freedoom.github.io.git",
-		"11238-docs 65535 https://gitlab.com/oglinuk/dont-panic-11238.git",
+		"11238-docs 65535 https://gitlab.com/oglinuk/11238.git",
 	}
 
 	// A fileserver source is a git hosted repo that does not necessarily fall
