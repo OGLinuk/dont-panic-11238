@@ -1,0 +1,97 @@
+<h2 id="a-guide-to-the-universe-of-your-localhost.">A guide to the universe of <strong><em>your</em></strong> <strong>localhost</strong>.</h2>
+<p>Yes the name is a spin off of <a href="">The Hitch Hikers Guide to the Galaxy</a>. No I have not finished the trilogy of four yet, so please no spoilers.</p>
+<h2 id="why">Why?</h2>
+<p>The hope behind dont-panic-11238 is to give people the ability to replicate the spaces or software of the internet that they observe/use. There is plenty of good content (cool tech, fun games, awesome blogs, good documentation, and a whole lot more) out their that is hosted via git, and because of that dont-panic-11238 enables you to have an up-to-date local copy of those repos. The idea then grows into your own universe or rather version of the internet that you have access to anytime, online/offline, and on any device (provided the device is capable of running dont-panic-11238 and all defined services of dont-panic-11238).</p>
+<h2 id="getting-started">Getting Started</h2>
+<p><code>make</code> &amp;&amp; <code>lynx localhost:11238</code></p>
+<p>or</p>
+<p><code>localhost:11238</code> on any browser</p>
+<h2 id="default-services-18-total">Default Services (18 total)</h2>
+<ul>
+<li>[X] dont-panic-11238</li>
+<li>[X] sbh (stateless password panager)</li>
+<li>[X] quotitioner (curlable and REST available quotes)</li>
+<li>[X] gitea (git web UI)</li>
+<li>[X] awesome-gitea (list of gitea projects)</li>
+<li>[X] www-archiver (http/s website archiver)</li>
+<li>[X] mediafs (videos, audio, images, gifs, …)</li>
+<li>[X] library (html, pdfs, whitepapers, …)</li>
+<li>[X] directories (lists of lists: individuals, projects, …)</li>
+<li>[X] chocolate-doom (cause DOOM)</li>
+<li>[X] fragglet-blog (creator/maintainer of chocolate-doom/freedoom)</li>
+<li>[X] freedoom-docs (website for freedoom)</li>
+<li>[X] rwx.gg (beginner boosts)</li>
+<li>[X] rwxrob (creator/maintainer of readme.world/rwx.gg/pegn.dev)</li>
+<li>[X] jessfraz (crazy smart person who runs <em>everything</em> in docker - look up her rant on open source firmware)</li>
+<li>[X] ptp (code snippets)</li>
+<li>[X] quakespasm (cause Quake)</li>
+</ul>
+<h2 id="standard-services-port-layout">Standard Services Port Layout</h2>
+<p>It is important to note that the already known used TCP and UDP ports are omitted from these ranges and are assumed not to be taken if not absolutely necessary.</p>
+<p><strong>&lt; 9000 not used</strong></p>
+<ul>
+<li>9000-9999 - functions (used by 11238)
+<ul>
+<li>9001 - sbh</li>
+<li>9429 - quotitioner</li>
+<li>9090 - gitea (currently 3000 (TODO))</li>
+</ul></li>
+<li>10000-19999 - applications (like 11238)
+<ul>
+<li>11238 (DONT PANIC!)</li>
+<li>11111 www-archiver</li>
+</ul></li>
+<li>20000-29999 - personal
+<ul>
+<li>…</li>
+</ul></li>
+<li>30000-39999 - games
+<ul>
+<li>30303 - doom (chocolate-doom)</li>
+<li>30304 - doom2 (crispy-doom)</li>
+<li>31313 - quake (quakespasm)</li>
+<li>31314 - quake2 (yamagi?)</li>
+<li>31315 - quake3 (quake3io)</li>
+<li>32323 - chess (smallchesslib)</li>
+<li>34343 - amongst-us (amongst-us)</li>
+</ul></li>
+<li>40000-44999 - blogs
+<ul>
+<li>40006 - fragglet-blog</li>
+<li>40007 - rwxrob-blog</li>
+<li>40008 - jessfraz-blog</li>
+<li>43000 - gitea-blog</li>
+</ul></li>
+<li>45000-49999 - docs
+<ul>
+<li>45000 - rwx.gg</li>
+<li>46000 - freedoom-docs</li>
+<li>46001 - linode-docs</li>
+</ul></li>
+<li>50000-59999 - fileservers
+<ul>
+<li>50000 - directories</li>
+<li>50001 - library</li>
+<li>50002 - ptp</li>
+<li>50700 - awesome-gitea</li>
+</ul></li>
+<li>60000-65535 - TODO: …</li>
+</ul>
+<h2 id="todo">TODO:</h2>
+<ul>
+<li>[X] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, …</li>
+<li>[X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)</li>
+<li>[X] Define the PORT layout for services the service sub-types (Still WiP but draft is done)</li>
+<li>[X] Write tests
+<ul>
+<li>[ ] <code>manifests_test.go</code></li>
+<li>[ ] <code>services_test.go</code></li>
+<li>[ ] <code>fileserver_test.go</code></li>
+<li>[ ] <code>dockerfile_test.go</code></li>
+<li>[ ] <code>scan_test.go</code></li>
+</ul></li>
+<li>[ ] Automate way to change PORTs of existing projects like gitea</li>
+<li>[ ]</li>
+<li>[ ] GoDoc</li>
+<li>[ ] Review</li>
+</ul>

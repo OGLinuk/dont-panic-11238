@@ -1,0 +1,122 @@
+version: '3.2'
+services:
+  sbh:
+    hostname: sbh
+    container_name: sbh-container
+    build: ./DONTPANIC/services/sbh-9001/examples/web
+    ports:
+      - 9001:9001
+    networks:
+      - tiered
+  quotitioner:
+    hostname: quotitioner
+    container_name: quotitioner-container
+    build: ./DONTPANIC/services/quotitioner-9429
+    ports:
+      - 9429:9429
+    networks:
+      - tiered
+  gitea:
+    hostname: gitea
+    container_name: gitea-container
+    build: ./DONTPANIC/services/gitea-3000
+    volumes:
+      - ./gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 3000:3000 # TODO: Automate changing to run on 9090
+      - "222:22"
+    networks:
+      - tiered
+  directories:
+    hostname: directories
+    container_name: directories-container
+    build: ./DONTPANIC/services/directories-50000
+    ports:
+      - 50000:50000
+    networks:
+      - tiered
+  library:
+    hostname: library
+    container_name: library-container
+    build: ./DONTPANIC/services/library-50001
+    ports:
+      - 50001:50001
+    networks:
+      - tiered
+  ptp:
+    hostname: ptp
+    container_name: ptp-container
+    build: ./DONTPANIC/services/ptp-50002
+    ports:
+      - 50002:50002
+    networks:
+      - tiered
+  fragglet-blog:
+    hostname: fragglet-blog
+    container_name: fragglet-blog-container
+    build: ./DONTPANIC/services/fragglet-blog-50006
+    ports:
+      - 50006:50006
+    networks:
+      - tiered
+  rwxrob-blog:
+    hostname: rwxrob-blog
+    container_name: rwxrob-blog-container
+    build: ./DONTPANIC/services/rwxrob-blog-50007
+    ports:
+      - 50007:50007
+    networks:
+      - tiered
+  jessfraz-blog:
+    hostname: jessfraz-blog
+    container_name: jessfraz-blog-container
+    build: ./DONTPANIC/services/jessfraz-blog-50008
+    ports:
+      - 50008:50008
+    networks:
+      - tiered
+  gitea-blog:
+    hostname: gitea-blog
+    container_name: gitea-blog-container
+    build: ./DONTPANIC/services/gitea-blog-50300
+    ports:
+      - 50300:50300
+    networks:
+      - tiered
+  rwx.gg:
+    hostname: rwx.gg
+    container_name: rwx.gg-container
+    build: ./DONTPANIC/services/rwx.gg-50500
+    ports:
+      - 50500:50500
+    networks:
+      - tiered
+  freedoom-docs:
+    hostname: freedoom-docs
+    container_name: freedoom-docs-container
+    build: ./DONTPANIC/services/freedoom-docs-50502
+    ports:
+      - 50502:50502
+    networks:
+      - tiered
+  awesome-gitea:
+    hostname: awesome-gitea
+    container_name: awesome-gitea-container
+    build: ./DONTPANIC/services/awesome-gitea-50700
+    ports:
+      - 50700:50700
+    networks:
+      - tiered
+  11238-docs:
+    hostname: 11238-docs
+    container_name: 11238-docs-container
+    build: ./DONTPANIC/services/11238-docs-65535
+    ports:
+      - 65535:65535
+    networks:
+      - tiered
+networks:
+  tiered:
+    external: false
