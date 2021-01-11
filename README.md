@@ -2,23 +2,41 @@
 title: dont-panic:11238
 ---
 
-## A guide to the universe of ***your*** **localhost**.
+## A guide to the universe of ***your*** **localhost(s)**.
 
-Yes the name is a spin off of [The Hitch Hikers Guide to the Galaxy](). No I have not finished the trilogy of four yet, so please no spoilers.
+Yes the name is a spin off of [The Hitch Hikers Guide to the Galaxy](https://en.wikipedia.org/wiki/The_Hitchhiker's_Guide_to_the_Galaxy). No I have not finished the trilogy of four yet, so please no spoilers.
 
 ## Why?
 
 The hope behind dont-panic-11238 is to give people the ability to replicate the spaces or software of the internet that they observe/use. There is plenty of good content (cool tech, fun games, awesome blogs, good documentation, and a whole lot more) out their that is hosted via git, and because of that dont-panic-11238 enables you to have an up-to-date local copy of those repos. The idea then grows into your own universe or rather version of the internet that you have access to anytime, online/offline, and on any device (provided the device is capable of running dont-panic-11238 and all defined services of dont-panic-11238).
 
-## Getting Started
+## **Pre-requisites**
 
-`make` && `lynx localhost:11238`
+* `>= go 1.15`
+* `>= docker 19.03.8`
+* `>= docker-compose 1.25.5`
+* `>= git 2.25.1`
 
-or
+## ***Getting Started***
 
-`localhost:11238` on any browser
+`go build && ./dont-panic-11238&`
 
-## Default Services (18 total)
+once all of the services have been downloaded then run
+
+`docker-compose up --build --remove-orphans`
+
+finally goto `localhost:11238` on any browser
+
+***Note:*** there are some services (like quakespasm) that arent web based and
+will have to be operated from its source.
+
+## Adding or Removing Services
+
+Simply navigate to `DONTPANIC/manifests` and edit the corresponding manifest
+file. The services will be added/removed by dont-panic-11238 during its next
+DONTPANIC execution.
+
+## Default Services (17 total so far)
 
 * [X] dont-panic-11238
 * [X] sbh (stateless password panager)
@@ -29,14 +47,14 @@ or
 * [X] mediafs (videos, audio, images, gifs, ...)
 * [X] library (html, pdfs, whitepapers, ...)
 * [X] directories (lists of lists: individuals, projects, ...)
+* [X] ptp (code snippets)
 * [X] chocolate-doom (cause DOOM)
 * [X] fragglet-blog (creator/maintainer of chocolate-doom/freedoom)
 * [X] freedoom-docs (website for freedoom)
+* [X] quakespasm (cause Quake)
 * [X] rwx.gg (beginner boosts)
 * [X] rwxrob (creator/maintainer of readme.world/rwx.gg/pegn.dev)
 * [X] jessfraz (crazy smart person who runs *everything* in docker - look up her rant on open source firmware)
-* [X] ptp (code snippets)
-* [X] quakespasm (cause Quake)
 
 ## Standard Services Port Layout
 
@@ -88,16 +106,22 @@ necessary.
 
 ## TODO:
 
-* [X] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, ...
+* [ ] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, ...
+    * [X] Fileserver
 * [X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)
 * [X] Define the PORT layout for services the service sub-types (Still WiP but draft is done)
-* [X] Write tests
+* [ ] Implement `git pull` functionality in services.go -> genService() if service exists
+* [ ] Generate `docker-compose.yml` file based on manifest file entries
+* [ ] Remove service when its removed from the manifest file
+* [ ] Create other manifest defaults (like one entirely focused around data science)
+* [ ] Implement [cmdtab](https://github.com/rwxrob/cmdtab)
+* [ ] Write tests
     * [ ] `manifests_test.go`
     * [ ] `services_test.go`
     * [ ] `fileserver_test.go`
     * [ ] `dockerfile_test.go`
     * [ ] `scan_test.go`
+    * [ ] `utils_test.go`
 * [ ] Automate way to change PORTs of existing projects like gitea
-* [ ] 
 * [ ] GoDoc
 * [ ] Review

@@ -60,7 +60,6 @@ func init() {
 	if err != nil {
 		log.Fatalf("Could not open log file ...")
 	}
-	//defer f.Close()
 
 	mw := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(mw)
@@ -75,10 +74,6 @@ func init() {
 func main() {
 	PORT := 11238
 	HOST := "0.0.0.0"
-
-	// Expose docs and services of dont-panic-11238's current state
-	http.Handle("/ports", http.FileServer(http.Dir("./docs")))
-	http.Handle("/services", http.FileServer(http.Dir("./DONTPANIC/services")))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Refactor ...
@@ -101,13 +96,13 @@ func main() {
 			<p>
 			This page took %s to scan.
 			<br>
-			Scan interval: %d (minutes)
+			Scan interval: %d (minutes) - use '-i <1-60>' to change the interval
 			<br>
 			Last scan was %s.
 			</p><br><br>
 
 			<h3>Current active ports:</h3>
-			<b>Total Services Running Locally: %d</b><br><br>
+			<b>Total Ports Active: %d</b><br><br>
 
 			%v
 		`, PORT, timeTaken, *interval, time.Since(timeSince), len(activeLocalhostPorts), portLinks)

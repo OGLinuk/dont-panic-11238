@@ -30,8 +30,6 @@ var (
 	// An application is a piece of software that requires state
 	applicationsDefault = []string{
 		"gitea 3000 https://github.com/go-gitea/gitea.git", // TODO: Fix (to 9090) when gendockercompose is implemented
-		"www-archiver 11111 https://gitlab.com/oglinuk/www-archiver.git",
-		"mediafs 12121 https://gitlab.com/oglinuk/mediafs.git",
 	}
 
 	// A blog is a git hosted collection of code/.md/.html/site/... files around
@@ -48,14 +46,14 @@ var (
 	// documenting or explaining something
 	docsDefault = []string{
 		"rwx.gg 50500 https://gitlab.com/rwx.gg/README.git",
-		"freedoom-docs 50502 https://github.com/freedoom/freedoom.github.io.git",
-		"11238-docs 65535 https://gitlab.com/oglinuk/11238.git",
+		"freedoom-docs 50501 https://github.com/freedoom/freedoom.github.io.git",
 	}
 
 	// A fileserver source is a git hosted repo that does not necessarily fall
 	// into the docs or blogs categories, but still requires the scaffolding of
 	// a fileserver
 	fileserverDefault = []string{
+		"mediafs 12121 https://gitlab.com/oglinuk/mediafs.git",
 		"directories 50000 https://gitlab.com/oglinuk/directories.git",
 		"library 50001 https://gitlab.com/oglinuk/library.git",
 		"ptp 50002 https://github.com/oglinuk/ptp.git",
@@ -107,7 +105,7 @@ func generateManifest(manifestType string) error {
 	case "personal":
 		return createManifestFile(manifestType, personalDefault)
 	default:
-		return fmt.Errorf("generateManifest::ERROR: Unknown type (%s)", manifestType)
+		return fmt.Errorf("manifests.go::Unknown type (%s)", manifestType)
 	}
 }
 
@@ -115,7 +113,7 @@ func generateManifest(manifestType string) error {
 func createDefaultManifests() error {
 	for _, t := range manifestTypes {
 		if err = generateManifest(t); err != nil {
-			log.Printf("generateManifest(%s)::ERROR: %s", t, err.Error())
+			log.Printf("manifests.go::generateManifest(%s)::ERROR: %s", t, err.Error())
 			return err
 		}
 	}
@@ -126,7 +124,6 @@ func createDefaultManifests() error {
 // createManifestsDir if not exists; then createDefaultManifests
 func createManifestsDir() error {
 	if _, err = os.Stat(MANIFESTSDIR); err != nil {
-		log.Println("Creating manifests dir and creating default manifests ...")
 		if err = os.MkdirAll(MANIFESTSDIR, 0744); err != nil {
 			return err
 		}
@@ -142,10 +139,9 @@ func createManifestsDir() error {
 // GenerateManifests directory && create default manifest files
 func GenerateManifests() {
 	if _, err = os.Stat(MANIFESTSDIR); err != nil {
-		log.Println("manifests dir not found, generating manifests ...")
-
+		log.Println("`manifests` dir not found, generating manifests ...")
 		if err = createManifestsDir(); err != nil {
-			log.Fatalf("createManifestDir::ERROR: %s", err.Error())
+			log.Fatalf("manifests.go::createManifestDir::ERROR: %s", err.Error())
 		}
 	}
 }

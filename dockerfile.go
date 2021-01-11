@@ -12,22 +12,25 @@ type dockerfile struct {
 	Port string
 }
 
-func NewDockerfile(name, port string) *dockerfile {
-	return &dockerfile{
+// NewDockerfile creates a new Dockerfile
+func NewDockerfile(name, port string) {
+	df := &dockerfile{
 		Name: name,
 		Port: port,
 	}
+	df.generate()
 }
 
 // TODO: Allow for more configurability
-func (df *dockerfile) GenerateDockerfile() {
+// generate a Dockerfile
+func (df *dockerfile) generate() {
 	serviceSourcePath := fmt.Sprintf("%s/%s-%s", SERVICESDIR, df.Name, df.Port)
 
 	// TODO: Abstract main.go generation to its own goscript
 	log.Println(serviceSourcePath)
 	dockerfile, err := os.Create(fmt.Sprintf("%s/Dockerfile", serviceSourcePath))
 	if err != nil {
-		log.Fatalf("os.Create(Dockerfile)::ERROR: %s", err.Error())
+		log.Fatalf("dockerfile.go::os.Create(Dockerfile)::ERROR: %s", err.Error())
 	}
 	defer dockerfile.Close()
 

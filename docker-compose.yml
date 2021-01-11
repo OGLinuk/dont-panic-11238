@@ -25,8 +25,16 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - 3000:3000 # TODO: Automate changing to run on 9090
+      - 3000:3000
       - "222:22"
+    networks:
+      - tiered
+  mediafs:
+    hostname: mediafs
+    container_name: mediafs-container
+    build: ./DONTPANIC/services/mediafs-12121
+    ports:
+      - 12121:12121
     networks:
       - tiered
   directories:
@@ -109,14 +117,5 @@ services:
       - 50700:50700
     networks:
       - tiered
-  11238-docs:
-    hostname: 11238-docs
-    container_name: 11238-docs-container
-    build: ./DONTPANIC/services/11238-docs-65535
-    ports:
-      - 65535:65535
-    networks:
-      - tiered
 networks:
   tiered:
-    external: false

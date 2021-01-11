@@ -6,32 +6,35 @@ import (
 	"os"
 )
 
-// TODO: Abstract the entire Dockerfile to allow for more granular config
+// fileserver is anything that requires http.FileServer
 type fileserver struct {
 	Name string
 	Port string
 }
 
-func NewFileserver(name, port string) *fileserver {
-	return &fileserver{
+// NewFileServer constructor
+func NewFileServer(name, port string) {
+	fs := &fileserver{
 		Name: name,
 		Port: port,
 	}
+	fs.generate()
 }
 
-func (fs *fileserver) ScaffoldFileserver() {
+// generate a main.go file at serviceSourcePath
+func (fs *fileserver) generate() {
 	serviceSourcePath := fmt.Sprintf("%s/%s-%s", SERVICESDIR, fs.Name, fs.Port)
 
-	df := NewDockerfile(fs.Name, fs.Port)
-	df.GenerateDockerfile()
+	NewDockerfile(fs.Name, fs.Port)
 
-	maindotgo, err := os.Create(fmt.Sprintf("%s/main.go", serviceSourcePath))
+	f, err := os.Create(fmt.Sprintf("%s/main.go", serviceSourcePath))
 	if err != nil {
-		log.Fatalf("os.Create(%s/main.go)::ERROR: %s", serviceSourcePath, err.Error())
+		log.Fatalf("fileserver.go::os.Create(%s/main.go)::ERROR: %s", serviceSourcePath, err.Error())
 	}
-	defer maindotgo.Close()
+	defer f.Close()
 
-	maindotgo.WriteString(fmt.Sprintf(`package main
+	// TODO: Refactor ...
+	f.WriteString(fmt.Sprintf(`package main
 
 import (
 	"fmt"

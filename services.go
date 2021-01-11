@@ -8,24 +8,8 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"strings"
 )
-
-var (
-	sType string
-)
-
-func runCmd(cmd string, args ...string) error {
-	execCmd := exec.Command(cmd, args...)
-	execCmd.Stdout = os.Stdout
-	execCmd.Stderr = os.Stderr
-
-	if err = execCmd.Run(); err != nil {
-		return err
-	}
-	return nil
-}
 
 // genService reads the manifest file located at sPath, git clones, then
 // invokes the functions corresponding to the sType
@@ -33,7 +17,7 @@ func genService(sType, sPath string) {
 	f, err := os.Open(sPath)
 	if err != nil {
 		// TODO: Improve ...
-		log.Printf("genService::os.Open::ERROR: %s", err.Error())
+		log.Printf("genService::os.Open(%s)::ERROR: %s", sPath, err.Error())
 	}
 	defer f.Close()
 
@@ -49,6 +33,8 @@ func genService(sType, sPath string) {
 		// Ex: services/sbh-9001
 		toCheck := fmt.Sprintf("%s/%s-%s", SERVICESDIR, sc[0], sc[1])
 		result := checkExists(toCheck)
+
+		// TODO: Change below to use go git
 		if result == false {
 			log.Printf("services.go: %s does not exists, [CLONING] now ...", toCheck)
 			wg.Add(1)
@@ -58,34 +44,16 @@ func genService(sType, sPath string) {
 					// TODO: Retry X times before resulting to error
 					log.Printf("services::runCmd::gitCLONE::ERROR: %s", err.Error())
 				}
-				switch sType {
-				case "blog":
-				case "docs":
-				case "fileserver":
-					fs := NewFileserver(sc[0], sc[1])
-					fs.ScaffoldFileserver()
-				case "functions":
-				case "applications":
-				case "personal":
-					// TODO: ...
-				default:
-					log.Printf("Unknown sType: %s ...", sType)
+
+				if sType == "fileserver" {
+					NewFileServer(sc[0], sc[1])
+				} else {
+					// TODO: Determine which service types require what
 				}
 			}()
 		} else {
 			log.Printf("services.go: %s exists, [UPDATING] now ...", toCheck)
-			// wg.Add(1)
-			// go func(toCheck string) {
-			// 	defer wg.Done()
-			// 	if err = os.Chdir(toCheck); err != nil {
-			// 		log.Printf("services::os.Chdir::ERROR: %s", err.Error())
-			// 	}
-			// 	if err = runCmd("git", "pull"); err != nil {
-			// 		// TODO: Retry X times before resulting to error
-			// 		log.Printf("services::runCmd::gitPULL::ERROR: %s", err.Error())
-			// 	}
-			// 	log.Printf("Successfully updated %s ...", toCheck)
-			// }(toCheck)
+			// TODO: ...
 		}
 	}
 	// We wg.Wait() in main.go -> init()
@@ -97,7 +65,7 @@ func init() {
 	// Ensure `services` directory exists
 	if _, err = os.Stat(SERVICESDIR); err != nil {
 		if err = os.MkdirAll(SERVICESDIR, 0744); err != nil {
-			log.Fatalf("checkExists(%s)::ERROR: %s", SERVICESDIR, err.Error())
+			log.Fatalf("services.go::checkExists(%s)::ERROR: %s", SERVICESDIR, err.Error())
 		}
 	}
 
@@ -105,7 +73,6 @@ func init() {
 	if err != nil {
 		log.Fatalf("Could not open log file ...")
 	}
-	//defer f.Close()
 
 	mw := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(mw)
@@ -117,8 +84,7 @@ func GenerateServices() {
 	manifests, err := ioutil.ReadDir(MANIFESTSDIR)
 	if err != nil {
 		// TODO: Generate defaults X times before erroring
-		//GenerateManifests()
-		log.Printf("GenerateServices::ioutil.ReadDir(%s)::ERROR: %s", MANIFESTSDIR, err.Error())
+		log.Printf("services.go::ioutil.ReadDir(%s)::ERROR: %s", MANIFESTSDIR, err.Error())
 	}
 
 	// For every manifest file, read its contents and download/update entries
@@ -129,13 +95,12 @@ func GenerateServices() {
 		wg.Add(1)
 		go func(mp, manifestName string) {
 			defer wg.Done()
-			// TODO: Change to switch statement
-			if manifestName == "blogs" || manifestName == "docs" {
+			// TODO: Do better ... switch statement?
+			if manifestName == "blogs" || manifestName == "docs" || manifestName == "fileserver" {
 				genService("fileserver", mp)
 			} else {
 				genService(manifestName, mp)
 			}
 		}(manifestPath, manifestName)
 	}
-	log.Println("Success!")
 }

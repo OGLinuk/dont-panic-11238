@@ -1,12 +1,21 @@
-<h2 id="a-guide-to-the-universe-of-your-localhost.">A guide to the universe of <strong><em>your</em></strong> <strong>localhost</strong>.</h2>
-<p>Yes the name is a spin off of <a href="">The Hitch Hikers Guide to the Galaxy</a>. No I have not finished the trilogy of four yet, so please no spoilers.</p>
+<h2 id="a-guide-to-the-universe-of-your-localhosts.">A guide to the universe of <strong><em>your</em></strong> <strong>localhost(s)</strong>.</h2>
+<p>Yes the name is a spin off of <a href="https://en.wikipedia.org/wiki/The_Hitchhiker&#39;s_Guide_to_the_Galaxy">The Hitch Hikers Guide to the Galaxy</a>. No I have not finished the trilogy of four yet, so please no spoilers.</p>
 <h2 id="why">Why?</h2>
 <p>The hope behind dont-panic-11238 is to give people the ability to replicate the spaces or software of the internet that they observe/use. There is plenty of good content (cool tech, fun games, awesome blogs, good documentation, and a whole lot more) out their that is hosted via git, and because of that dont-panic-11238 enables you to have an up-to-date local copy of those repos. The idea then grows into your own universe or rather version of the internet that you have access to anytime, online/offline, and on any device (provided the device is capable of running dont-panic-11238 and all defined services of dont-panic-11238).</p>
-<h2 id="getting-started">Getting Started</h2>
-<p><code>make</code> &amp;&amp; <code>lynx localhost:11238</code></p>
-<p>or</p>
-<p><code>localhost:11238</code> on any browser</p>
-<h2 id="default-services-18-total">Default Services (18 total)</h2>
+<h2 id="pre-requisites"><strong>Pre-requisites</strong></h2>
+<ul>
+<li><code>&gt;= go 1.15</code></li>
+<li><code>&gt;= docker 19.03.8</code></li>
+<li><code>&gt;= docker-compose 1.25.5</code></li>
+<li><code>&gt;= git 2.25.1</code></li>
+</ul>
+<h2 id="getting-started"><strong><em>Getting Started</em></strong></h2>
+<p><code>go build &amp;&amp; ./dont-panic-11238&amp;</code></p>
+<p>once all of the services have been downloaded then run</p>
+<p><code>docker-compose up --build --remove-orphans</code></p>
+<p>finally goto <code>localhost:11238</code> on any browser</p>
+<p><strong><em>Note:</em></strong> there are some services (like quakespasm) that arent web based and will have to be operated from its source.</p>
+<h2 id="default-services-17-total-so-far">Default Services (17 total so far)</h2>
 <ul>
 <li>[X] dont-panic-11238</li>
 <li>[X] sbh (stateless password panager)</li>
@@ -17,14 +26,14 @@
 <li>[X] mediafs (videos, audio, images, gifs, …)</li>
 <li>[X] library (html, pdfs, whitepapers, …)</li>
 <li>[X] directories (lists of lists: individuals, projects, …)</li>
+<li>[X] ptp (code snippets)</li>
 <li>[X] chocolate-doom (cause DOOM)</li>
 <li>[X] fragglet-blog (creator/maintainer of chocolate-doom/freedoom)</li>
 <li>[X] freedoom-docs (website for freedoom)</li>
+<li>[X] quakespasm (cause Quake)</li>
 <li>[X] rwx.gg (beginner boosts)</li>
 <li>[X] rwxrob (creator/maintainer of readme.world/rwx.gg/pegn.dev)</li>
 <li>[X] jessfraz (crazy smart person who runs <em>everything</em> in docker - look up her rant on open source firmware)</li>
-<li>[X] ptp (code snippets)</li>
-<li>[X] quakespasm (cause Quake)</li>
 </ul>
 <h2 id="standard-services-port-layout">Standard Services Port Layout</h2>
 <p>It is important to note that the already known used TCP and UDP ports are omitted from these ranges and are assumed not to be taken if not absolutely necessary.</p>
@@ -79,19 +88,26 @@
 </ul>
 <h2 id="todo">TODO:</h2>
 <ul>
-<li>[X] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, …</li>
+<li>[ ] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, …
+<ul>
+<li>[X] Fileserver</li>
+</ul></li>
 <li>[X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)</li>
 <li>[X] Define the PORT layout for services the service sub-types (Still WiP but draft is done)</li>
-<li>[X] Write tests
+<li>[ ] Implement <code>git pull</code> functionality in services.go -&gt; genService() if service exists</li>
+<li>[ ] Generate <code>docker-compose.yml</code> file based on manifest file entries</li>
+<li>[ ] Create other manifest defaults (like one entirely focused around data science)</li>
+<li>[ ] Implement <a href="https://github.com/rwxrob/cmdtab">cmdtab</a></li>
+<li>[ ] Write tests
 <ul>
 <li>[ ] <code>manifests_test.go</code></li>
 <li>[ ] <code>services_test.go</code></li>
 <li>[ ] <code>fileserver_test.go</code></li>
 <li>[ ] <code>dockerfile_test.go</code></li>
 <li>[ ] <code>scan_test.go</code></li>
+<li>[ ] <code>utils_test.go</code></li>
 </ul></li>
 <li>[ ] Automate way to change PORTs of existing projects like gitea</li>
-<li>[ ]</li>
 <li>[ ] GoDoc</li>
 <li>[ ] Review</li>
 </ul>
