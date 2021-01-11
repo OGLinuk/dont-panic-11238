@@ -106,7 +106,7 @@ services:
     container_name: freedoom-docs-container
     build: ./DONTPANIC/services/freedoom-docs-50501
     ports:
-      - 50502:50502
+      - 50501:50501
     networks:
       - tiered
   awesome-gitea:
