@@ -39,6 +39,7 @@ func DONTPANIC() {
 	GenerateManifests()
 	GenerateServices()
 	wg.Wait()
+	GenerateDockerCompose()
 
 	// TODO: add manifest of standard/reserved service ports to check initially
 	// as a heartbeat analytics measure
@@ -92,7 +93,7 @@ func main() {
 			services all running on various ports locally! Below is a list
 			of all active ports.
 			</p><br><br>
-			
+
 			<p>
 			This page took %s to scan.
 			<br>

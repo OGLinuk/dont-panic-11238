@@ -110,7 +110,7 @@ necessary.
 * [X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)
 * [X] Define the PORT layout for services the service sub-types (Still WiP but draft is done)
 * [X] Implement `git pull` functionality in services.go -> genService() if service exists
-* [ ] Generate `docker-compose.yml` file based on manifest file entries
+* [X] Generate `docker-compose.yml` file based on manifest file entries
 * [ ] Remove service when its removed from the manifest file
 * [ ] Create environments other than the default (generated manifests)
     * [ ] Data science
@@ -126,6 +126,7 @@ necessary.
     * [ ] `dockerfile_test.go`
     * [ ] `scan_test.go`
     * [ ] `utils_test.go`
+    * [ ] `dockercompose.go`
 * [ ] Automate way to change PORTs of existing projects like gitea
 * [ ] GoDoc
 * [ ] Review

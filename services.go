@@ -81,6 +81,7 @@ func init() {
 
 // GenerateServices defined in all manifest files located in MANIFESTSDIR
 func GenerateServices() {
+	// TODO: Find a way to compress opening and iterating over the content of manifest files
 	// Get all manifest files
 	manifests, err := ioutil.ReadDir(MANIFESTSDIR)
 	if err != nil {
