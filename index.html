@@ -15,6 +15,8 @@
 <p><code>docker-compose up --build --remove-orphans</code></p>
 <p>finally goto <code>localhost:11238</code> on any browser</p>
 <p><strong><em>Note:</em></strong> there are some services (like quakespasm) that arent web based and will have to be operated from its source.</p>
+<h2 id="adding-or-removing-services">Adding or Removing Services</h2>
+<p>Simply navigate to <code>DONTPANIC/manifests</code> and edit the corresponding manifest file. The services will be added/removed by dont-panic-11238 during its next DONTPANIC execution.</p>
 <h2 id="default-services-17-total-so-far">Default Services (17 total so far)</h2>
 <ul>
 <li>[X] dont-panic-11238</li>
@@ -39,21 +41,18 @@
 <p>It is important to note that the already known used TCP and UDP ports are omitted from these ranges and are assumed not to be taken if not absolutely necessary.</p>
 <p><strong>&lt; 9000 not used</strong></p>
 <ul>
-<li>9000-9999 - functions (used by 11238)
+<li>9000-9999 - functions
 <ul>
 <li>9001 - sbh</li>
 <li>9429 - quotitioner</li>
 <li>9090 - gitea (currently 3000 (TODO))</li>
 </ul></li>
-<li>10000-19999 - applications (like 11238)
+<li>10000-19999 - applications
 <ul>
 <li>11238 (DONT PANIC!)</li>
 <li>11111 www-archiver</li>
 </ul></li>
-<li>20000-29999 - personal
-<ul>
-<li>…</li>
-</ul></li>
+<li><p>20000-29999 - personal</p></li>
 <li>30000-39999 - games
 <ul>
 <li>30303 - doom (chocolate-doom)</li>
@@ -84,7 +83,7 @@
 <li>50002 - ptp</li>
 <li>50700 - awesome-gitea</li>
 </ul></li>
-<li>60000-65535 - TODO: …</li>
+<li><p>60000-65535 - TODO: …</p></li>
 </ul>
 <h2 id="todo">TODO:</h2>
 <ul>
@@ -94,9 +93,17 @@
 </ul></li>
 <li>[X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)</li>
 <li>[X] Define the PORT layout for services the service sub-types (Still WiP but draft is done)</li>
-<li>[ ] Implement <code>git pull</code> functionality in services.go -&gt; genService() if service exists</li>
+<li>[X] Implement <code>git pull</code> functionality in services.go -&gt; genService() if service exists</li>
 <li>[ ] Generate <code>docker-compose.yml</code> file based on manifest file entries</li>
-<li>[ ] Create other manifest defaults (like one entirely focused around data science)</li>
+<li>[ ] Remove service when its removed from the manifest file</li>
+<li>[ ] Create environments other than the default (generated manifests)
+<ul>
+<li>[ ] Data science</li>
+<li>[ ] Livestreaming</li>
+<li>[ ] Pentesting</li>
+<li>[ ] Web development</li>
+<li>[ ] Writing (blogging, notes, …)</li>
+</ul></li>
 <li>[ ] Implement <a href="https://github.com/rwxrob/cmdtab">cmdtab</a></li>
 <li>[ ] Write tests
 <ul>

@@ -34,12 +34,12 @@ func genService(sType, sPath string) {
 		toCheck := fmt.Sprintf("%s/%s-%s", SERVICESDIR, sc[0], sc[1])
 		result := checkExists(toCheck)
 
-		// TODO: Change below to use go git
-		if result == false {
-			log.Printf("services.go: %s does not exists, [CLONING] now ...", toCheck)
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			// TODO: Change below to use go git
+			if result == false {
+				log.Printf("services.go: %s does not exists, [CLONING] now ...", toCheck)
 				if err = runCmd("git", "clone", sc[2], toCheck); err != nil {
 					// TODO: Retry X times before resulting to error
 					log.Printf("services::runCmd::gitCLONE::ERROR: %s", err.Error())
@@ -50,13 +50,14 @@ func genService(sType, sPath string) {
 				} else {
 					// TODO: Determine which service types require what
 				}
-			}()
-		} else {
-			log.Printf("services.go: %s exists, [UPDATING] now ...", toCheck)
-			// TODO: ...
-		}
+			} else {
+				log.Printf("services.go: %s exists, [UPDATING] now ...", toCheck)
+				if err = runCmd("git", "-C", toCheck, "pull", "origin", "master"); err != nil {
+					log.Printf("services.go::runCmd::ERROR:%s", err.Error())
+				}
+			}
+		}()
 	}
-	// We wg.Wait() in main.go -> init()
 }
 
 func init() {

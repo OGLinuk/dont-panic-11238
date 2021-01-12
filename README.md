@@ -64,17 +64,16 @@ necessary.
 
 **< 9000 not used**
 
-* 9000-9999 - functions (used by 11238)
+* 9000-9999 - functions
     * 9001 - sbh
     * 9429 - quotitioner
     * 9090 - gitea (currently 3000 (TODO))
 
-* 10000-19999 - applications (like 11238)
+* 10000-19999 - applications
     * 11238 (DONT PANIC!)
     * 11111 www-archiver
 
 * 20000-29999 - personal
-    * ...
 
 * 30000-39999 - games
     * 30303 - doom (chocolate-doom)
@@ -84,7 +83,7 @@ necessary.
     * 31315 - quake3 (quake3io)
     * 32323 - chess (smallchesslib)
     * 34343 - amongst-us (amongst-us)
-    
+
 * 40000-44999 - blogs
     * 40006 - fragglet-blog
     * 40007 - rwxrob-blog
@@ -110,10 +109,15 @@ necessary.
     * [X] Fileserver
 * [X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)
 * [X] Define the PORT layout for services the service sub-types (Still WiP but draft is done)
-* [ ] Implement `git pull` functionality in services.go -> genService() if service exists
+* [X] Implement `git pull` functionality in services.go -> genService() if service exists
 * [ ] Generate `docker-compose.yml` file based on manifest file entries
 * [ ] Remove service when its removed from the manifest file
-* [ ] Create other manifest defaults (like one entirely focused around data science)
+* [ ] Create environments other than the default (generated manifests)
+    * [ ] Data science
+    * [ ] Livestreaming
+    * [ ] Pentesting
+    * [ ] Web development
+    * [ ] Writing (blogging, notes, ...)
 * [ ] Implement [cmdtab](https://github.com/rwxrob/cmdtab)
 * [ ] Write tests
     * [ ] `manifests_test.go`
