@@ -16,6 +16,7 @@ import (
 
 var (
 	interval = flag.Uint64("i", 15, "Interval to scan and check manifests/services (Default is 15)")
+	env      = flag.String("e", "default", "Environment to generate")
 
 	ROOTDIR              = "DONTPANIC"
 	MANIFESTSDIR         = fmt.Sprintf("%s/%s", ROOTDIR, "manifests")
@@ -36,9 +37,8 @@ func DONTPANIC() {
 		}
 	}
 
-	GenerateManifests()
+	GenerateManifests(*env)
 	GenerateServices()
-	wg.Wait()
 	GenerateDockerCompose()
 
 	// TODO: add manifest of standard/reserved service ports to check initially

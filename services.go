@@ -105,4 +105,5 @@ func GenerateServices() {
 			}
 		}(manifestPath, manifestName)
 	}
+	wg.Wait()
 }

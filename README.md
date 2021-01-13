@@ -67,7 +67,7 @@ necessary.
 * 9000-9999 - functions
     * 9001 - sbh
     * 9429 - quotitioner
-    * 9090 - gitea (currently 3000 (TODO))
+    * 9999 - gitea (currently 3000 (TODO))
 
 * 10000-19999 - applications
     * 11238 (DONT PANIC!)
@@ -77,23 +77,27 @@ necessary.
 
 * 30000-39999 - games
     * 30303 - doom (chocolate-doom)
-    * 30304 - doom2 (crispy-doom)
-    * 31313 - quake (quakespasm)
-    * 31314 - quake2 (yamagi?)
-    * 31315 - quake3 (quake3io)
+    * 30304 - doom2 (chocolate-doom)
+    * 31313 - quake (fteqw)
+    * 31314 - quake2 (fteqw)
+    * 31315 - quake3 (fteqw)
     * 32323 - chess (smallchesslib)
     * 34343 - amongst-us (amongst-us)
 
-* 40000-44999 - blogs
+* 40000-43999 - (individuals) blogs
     * 40006 - fragglet-blog
     * 40007 - rwxrob-blog
     * 40008 - jessfraz-blog
-    * 43000 - gitea-blog
+
+* 43999-44999 - (projects) blogs
+    * 43001 - go-blog
+    * 43001 - gitea-blog
 
 * 45000-49999 - docs
     * 45000 - rwx.gg
 	* 46000 - freedoom-docs
     * 46001 - linode-docs
+    * 49999 - godocs
 
 * 50000-59999 - fileservers
     * 50000 - directories
@@ -105,20 +109,26 @@ necessary.
 
 ## TODO:
 
-* [ ] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, ...
+* [X] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, ...
     * [X] Fileserver
 * [X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)
 * [X] Define the PORT layout for services the service sub-types (Still WiP but draft is done)
 * [X] Implement `git pull` functionality in services.go -> genService() if service exists
 * [X] Generate `docker-compose.yml` file based on manifest file entries
-* [ ] Remove service when its removed from the manifest file
-* [ ] Create environments other than the default (generated manifests)
+    * [ ] Add functionality to append a service
+    * [ ] Add functionality to remove a service
+        * [ ] Remove service when its removed from the manifest file
+* [X] Refactor `GenerateManifests` and abstract the default environment generated
+* [X] Create localhost environments (default universes focused on a specific topic)
+    * [X] Default
     * [ ] Data science
     * [ ] Livestreaming
     * [ ] Pentesting
     * [ ] Web development
     * [ ] Writing (blogging, notes, ...)
-* [ ] Implement [cmdtab](https://github.com/rwxrob/cmdtab)
+* [ ] Create `pandoc.go` to generate HTML from markdown files
+    * [ ] RenderMarkdown
+    * [ ] RenderCode
 * [ ] Write tests
     * [ ] `manifests_test.go`
     * [ ] `services_test.go`
@@ -127,6 +137,7 @@ necessary.
     * [ ] `scan_test.go`
     * [ ] `utils_test.go`
     * [ ] `dockercompose.go`
+* [ ] Replace `Makefile` with [cmdtab](https://github.com/rwxrob/cmdtab)
 * [ ] Automate way to change PORTs of existing projects like gitea
 * [ ] GoDoc
 * [ ] Review

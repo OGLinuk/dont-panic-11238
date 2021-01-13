@@ -45,7 +45,7 @@
 <ul>
 <li>9001 - sbh</li>
 <li>9429 - quotitioner</li>
-<li>9090 - gitea (currently 3000 (TODO))</li>
+<li>9999 - gitea (currently 3000 (TODO))</li>
 </ul></li>
 <li>10000-19999 - applications
 <ul>
@@ -56,25 +56,30 @@
 <li>30000-39999 - games
 <ul>
 <li>30303 - doom (chocolate-doom)</li>
-<li>30304 - doom2 (crispy-doom)</li>
-<li>31313 - quake (quakespasm)</li>
-<li>31314 - quake2 (yamagi?)</li>
-<li>31315 - quake3 (quake3io)</li>
+<li>30304 - doom2 (chocolate-doom)</li>
+<li>31313 - quake (fteqw)</li>
+<li>31314 - quake2 (fteqw)</li>
+<li>31315 - quake3 (fteqw)</li>
 <li>32323 - chess (smallchesslib)</li>
 <li>34343 - amongst-us (amongst-us)</li>
 </ul></li>
-<li>40000-44999 - blogs
+<li>40000-43999 - (individuals) blogs
 <ul>
 <li>40006 - fragglet-blog</li>
 <li>40007 - rwxrob-blog</li>
 <li>40008 - jessfraz-blog</li>
-<li>43000 - gitea-blog</li>
+</ul></li>
+<li>43999-44999 - (projects) blogs
+<ul>
+<li>43001 - go-blog</li>
+<li>43001 - gitea-blog</li>
 </ul></li>
 <li>45000-49999 - docs
 <ul>
 <li>45000 - rwx.gg</li>
 <li>46000 - freedoom-docs</li>
 <li>46001 - linode-docs</li>
+<li>49999 - godocs</li>
 </ul></li>
 <li>50000-59999 - fileservers
 <ul>
@@ -87,24 +92,36 @@
 </ul>
 <h2 id="todo">TODO:</h2>
 <ul>
-<li>[ ] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, …
+<li>[X] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, …
 <ul>
 <li>[X] Fileserver</li>
 </ul></li>
 <li>[X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)</li>
 <li>[X] Define the PORT layout for services the service sub-types (Still WiP but draft is done)</li>
 <li>[X] Implement <code>git pull</code> functionality in services.go -&gt; genService() if service exists</li>
-<li>[ ] Generate <code>docker-compose.yml</code> file based on manifest file entries</li>
-<li>[ ] Remove service when its removed from the manifest file</li>
-<li>[ ] Create environments other than the default (generated manifests)
+<li>[X] Generate <code>docker-compose.yml</code> file based on manifest file entries
 <ul>
+<li>[ ] Add functionality to append a service</li>
+<li>[ ] Add functionality to remove a service
+<ul>
+<li>[ ] Remove service when its removed from the manifest file</li>
+</ul></li>
+</ul></li>
+<li>[X] Refactor <code>GenerateManifests</code> and abstract the default environment generated</li>
+<li>[X] Create localhost environments (default universes focused on a specific topic)
+<ul>
+<li>[X] Default</li>
 <li>[ ] Data science</li>
 <li>[ ] Livestreaming</li>
 <li>[ ] Pentesting</li>
 <li>[ ] Web development</li>
 <li>[ ] Writing (blogging, notes, …)</li>
 </ul></li>
-<li>[ ] Implement <a href="https://github.com/rwxrob/cmdtab">cmdtab</a></li>
+<li>[ ] Create <code>pandoc.go</code> to generate HTML from markdown files
+<ul>
+<li>[ ] RenderMarkdown</li>
+<li>[ ] RenderCode</li>
+</ul></li>
 <li>[ ] Write tests
 <ul>
 <li>[ ] <code>manifests_test.go</code></li>
@@ -113,7 +130,9 @@
 <li>[ ] <code>dockerfile_test.go</code></li>
 <li>[ ] <code>scan_test.go</code></li>
 <li>[ ] <code>utils_test.go</code></li>
+<li>[ ] <code>dockercompose.go</code></li>
 </ul></li>
+<li>[ ] Replace <code>Makefile</code> with <a href="https://github.com/rwxrob/cmdtab">cmdtab</a></li>
 <li>[ ] Automate way to change PORTs of existing projects like gitea</li>
 <li>[ ] GoDoc</li>
 <li>[ ] Review</li>
