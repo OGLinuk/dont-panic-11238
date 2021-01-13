@@ -18,8 +18,11 @@ var (
 	interval = flag.Uint64("i", 15, "Interval to scan and check manifests/services (Default is 15)")
 	env      = flag.String("e", "default", "Environment to generate")
 
-	ROOTDIR              = "DONTPANIC"
-	MANIFESTSDIR         = fmt.Sprintf("%s/%s", ROOTDIR, "manifests")
+	// ROOTDIR is a directory containing the manifests and services directories used by dont-panic-11238
+	ROOTDIR = "DONTPANIC"
+	// MANIFESTDIR is a directory containing the manifest files
+	MANIFESTSDIR = fmt.Sprintf("%s/%s", ROOTDIR, "manifests")
+	// SERVICEDIR is a directory containing the git repositories
 	SERVICESDIR          = fmt.Sprintf("%s/%s", ROOTDIR, "services")
 	err                  error
 	wg                   = &sync.WaitGroup{}
@@ -47,7 +50,7 @@ func DONTPANIC() {
 	sTime := time.Now()
 
 	// TODO: Improve ...
-	activeLocalhostPorts = scanLocalhost()
+	activeLocalhostPorts = ScanLocalhost()
 
 	timeTaken = time.Since(sTime)
 	timeSince = time.Now()
@@ -75,6 +78,9 @@ func init() {
 func main() {
 	PORT := 11238
 	HOST := "0.0.0.0"
+
+	// Make the documentation of dont-panic-11238 available at `localhost:11238/docs`
+	http.Handle("/docs", http.FileServer(http.Dir("./docs")))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Refactor ...

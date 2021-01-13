@@ -11,13 +11,16 @@ import (
 	"strings"
 )
 
-// genService reads the manifest file located at sPath, git clones, then
-// invokes the functions corresponding to the sType
-func genService(sType, sPath string) {
-	f, err := os.Open(sPath)
+// GenerateService reads the manifest file located at servicePath, git clones, then
+// invokes the functions corresponding to serviceType
+//
+// TODO: Change serviceType to `fn func(name, port, link string)`
+// and allow a func to be passed to scaffold the servicePath repository
+func GenerateService(serviceName, serviceType, servicePath string) {
+	f, err := os.Open(servicePath)
 	if err != nil {
 		// TODO: Improve ...
-		log.Printf("genService::os.Open(%s)::ERROR: %s", sPath, err.Error())
+		log.Printf("genService::os.Open(%s)::ERROR: %s", servicePath, err.Error())
 	}
 	defer f.Close()
 
@@ -30,8 +33,8 @@ func genService(sType, sPath string) {
 			log.Fatal(fmt.Errorf(`service [%s] does not have all 3 required components <name> <port> <link>`, service))
 		}
 
-		// Ex: services/sbh-9001
-		toCheck := fmt.Sprintf("%s/%s-%s", SERVICESDIR, sc[0], sc[1])
+		// Ex: services/functions/sbh-9001
+		toCheck := fmt.Sprintf("%s/%s/%s-%s", SERVICESDIR, serviceName, sc[0], sc[1])
 		result := checkExists(toCheck)
 
 		wg.Add(1)
@@ -45,10 +48,11 @@ func genService(sType, sPath string) {
 					log.Printf("services::runCmd::gitCLONE::ERROR: %s", err.Error())
 				}
 
-				if sType == "fileserver" {
-					NewFileServer(sc[0], sc[1])
+				// TODO: Replace below with TODO of GenerateService
+				if serviceType == "fileserver" {
+					GenerateFileServer(sc[0], sc[1], toCheck)
 				} else {
-					// TODO: Determine which service types require what
+					// TODO: See above TODO
 				}
 			} else {
 				log.Printf("services.go: %s exists, [UPDATING] now ...", toCheck)
@@ -92,17 +96,35 @@ func GenerateServices() {
 	// For every manifest file, read its contents and download/update entries
 	for _, manifest := range manifests {
 		manifestName := manifest.Name()
-		manifestPath := fmt.Sprintf("%s/%s", MANIFESTSDIR, manifestName)
 
+		servicesPath := fmt.Sprintf("%s/%s", SERVICESDIR, manifestName)
+		if _, err = os.Stat(servicesPath); err != nil {
+			// TODO: When `readme.go` is implemented, create a default README.md file in servicesPath dir
+			if err = os.MkdirAll(servicesPath, 0744); err != nil {
+				log.Printf("services.go::os.MkdirAll(%s)::ERROR:%s", servicesPath, err.Error())
+			}
+		}
+
+		manifestPath := fmt.Sprintf("%s/%s", MANIFESTSDIR, manifestName)
 		wg.Add(1)
 		go func(mp, manifestName string) {
+			var maniType string
+
 			defer wg.Done()
-			// TODO: Do better ... switch statement?
-			if manifestName == "blogs" || manifestName == "docs" || manifestName == "fileserver" {
-				genService("fileserver", mp)
+			// TODO: Implement GenerateService TODO to replace this
+			if manifestName == "docs" {
+				maniType = "fileserver"
+			} else if manifestName == "individuals-blog" {
+				maniType = "fileserver"
+			} else if manifestName == "projects-blog" {
+				maniType = "fileserver"
+			} else if manifestName == "fileserver" {
+				maniType = "fileserver"
 			} else {
-				genService(manifestName, mp)
+				maniType = manifestName
 			}
+
+			GenerateService(manifestName, maniType, mp)
 		}(manifestPath, manifestName)
 	}
 	wg.Wait()

@@ -6,34 +6,17 @@ import (
 	"os"
 )
 
-// fileserver is anything that requires http.FileServer
-type fileserver struct {
-	Name string
-	Port string
-}
+// GenerateFileServer creates Dockerfile and main.go files using the given name and port at path
+func GenerateFileServer(name, port, path string) {
+	GenerateDockerfile(name, port, path)
 
-// NewFileServer constructor
-func NewFileServer(name, port string) {
-	fs := &fileserver{
-		Name: name,
-		Port: port,
-	}
-	fs.generate()
-}
-
-// generate a main.go file at serviceSourcePath
-func (fs *fileserver) generate() {
-	serviceSourcePath := fmt.Sprintf("%s/%s-%s", SERVICESDIR, fs.Name, fs.Port)
-
-	NewDockerfile(fs.Name, fs.Port)
-
-	f, err := os.Create(fmt.Sprintf("%s/main.go", serviceSourcePath))
+	f, err := os.Create(fmt.Sprintf("%s/main.go", path))
 	if err != nil {
-		log.Fatalf("fileserver.go::os.Create(%s/main.go)::ERROR: %s", serviceSourcePath, err.Error())
+		log.Fatalf("fileserver.go::os.Create(%s/main.go)::ERROR: %s", path, err.Error())
 	}
 	defer f.Close()
 
-	// TODO: Refactor ...
+	// TODO: Same as dockerfile.go ...
 	f.WriteString(fmt.Sprintf(`package main
 
 import (
@@ -51,5 +34,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir(".")))
 	log.Printf("Serving %s on %s ...", NAME, PORT)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", PORT), nil))
-}`, fs.Name, fs.Port, "%s", "%d", "%d"))
+}`, name, port, "%s", "%d", "%d"))
+
+	// TODO: Do check to ensure the Dockerfile and main.go file were created
 }

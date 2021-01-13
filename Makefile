@@ -10,6 +10,7 @@ services:
 clean:
 	killall dont-panic-11238
 	rm dont-panic-11238
+	rm -rf DONTPANIC docker-compose.yml
 
 clean-services:
 	docker-compose down

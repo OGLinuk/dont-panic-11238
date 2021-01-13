@@ -26,25 +26,28 @@ type dockercompose struct {
 }
 
 var (
-	DOCKERCOMPOSEFILE    = "docker-compose.yml"
+	// DOCKERCOMPOSEVERSION is the version used in the generated docker-compose.yml
 	DOCKERCOMPOSEVERSION = "3.2"
+	dcFilename           = "docker-compose.yml"
 )
 
 func appendService(dc *dockercompose, ds dockerservice) {
 	dc.Services[ds.Hostname] = ds
 }
 
+// GenerateDockerCompose file with all entries of all manifest files in DONTPANIC/manifests
 func GenerateDockerCompose() {
 	dc := &dockercompose{
 		Version:  DOCKERCOMPOSEVERSION,
 		Services: make(map[string]dockerservice),
-		Networks: make(map[string]interface{}),
+		Networks: map[string]interface{}{
+			"tiered": nil,
+		},
 	}
-	dc.Networks["tiered"] = nil
 
-	dcf, err := os.Create(DOCKERCOMPOSEFILE)
+	dcf, err := os.Create(dcFilename)
 	if err != nil {
-		log.Printf("dockercompose.go::os.Create(%s)::ERROR: %s", DOCKERCOMPOSEFILE, err.Error())
+		log.Printf("dockercompose.go::os.Create(%s)::ERROR: %s", dcFilename, err.Error())
 	}
 	defer dcf.Close()
 
@@ -83,9 +86,9 @@ func GenerateDockerCompose() {
 				// URGENT as will break if any other services used are like sbh
 				var bp string
 				if sc[0] == "sbh" {
-					bp = fmt.Sprintf("./DONTPANIC/services/%s-%s/examples/web", sc[0], sc[1])
+					bp = fmt.Sprintf("./DONTPANIC/services/%s/%s-%s/examples/web", manifestName, sc[0], sc[1])
 				} else {
-					bp = fmt.Sprintf("./DONTPANIC/services/%s-%s", sc[0], sc[1])
+					bp = fmt.Sprintf("./DONTPANIC/services/%s/%s-%s", manifestName, sc[0], sc[1])
 				}
 				appendService(dc, dockerservice{
 					Hostname:      sc[0],

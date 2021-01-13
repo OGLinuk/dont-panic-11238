@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// CreateManifestFile called name with defaults for the content
+// CreateManifestFile called name which contains defaults given
 func CreateManifestFile(name string, defaults []string) {
 	defer wg.Done()
 
