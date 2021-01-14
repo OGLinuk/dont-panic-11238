@@ -26,7 +26,7 @@ func GenerateDockerfile(name, port, path string) {
 	dockerfile.WriteString(fmt.Sprintf("FROM %s\n", BASEIMAGE))
 	dockerfile.WriteString(fmt.Sprintf("ADD . /go/src/%s\n", fullServiceName))
 	dockerfile.WriteString(fmt.Sprintf("WORKDIR /go/src/%s\n", fullServiceName))
-	dockerfile.WriteString(fmt.Sprintf("RUN %s\n", fullServiceName))
+	dockerfile.WriteString(fmt.Sprintf("RUN go build -o %s\n", fullServiceName))
 	dockerfile.WriteString(fmt.Sprintf("EXPOSE %s\n", fmt.Sprintf("%s:%s", port, port)))
 	dockerfile.WriteString(fmt.Sprintf("CMD [%s]", fullServiceName))
 }
