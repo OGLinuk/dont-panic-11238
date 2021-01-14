@@ -3,22 +3,7 @@
 <li>[ ] Organize better</li>
 <li>[ ] Create a way to customize granularity (category, priority …)</li>
 </ul>
-<h2 id="for-docs-and-root-readme.md">For <code>docs</code> and root README.md</h2>
-<ul>
-<li>[ ] Use <code>pandoc.go</code> to generate HTML files</li>
-</ul>
-<h2 id="for-docsports">For <code>docs/ports</code></h2>
-<ul>
-<li>[ ] Review layout and improve</li>
-</ul>
-<h2 id="for-services.go">For <code>services.go</code></h2>
-<ul>
-<li>[ ] Change serviceType to <code>fn func(name, port, link string)</code> and allow a func to be passed to scaffold the servicePath repository
-<ul>
-<li>Ex:</li>
-</ul></li>
-<li>[ ] Use <code>readme.go</code> to generate a default README.md file in manifestPath dir</li>
-</ul>
+<hr />
 <h2 id="for-dont-panic-11238-in-general">For dont-panic-11238 in general</h2>
 <ul>
 <li>[X] Create a framework to scaffold the minimal code necessary to serve a function, application, blog, …
@@ -28,31 +13,6 @@
 <li>[X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)</li>
 <li>[X] Define the PORT layout for services the service sub-types (still WiP but draft is done)</li>
 <li>[X] Define environment manifest types (still WiP but draft is done)</li>
-<li>[X] Implement <code>git pull</code> functionality in services.go -&gt; genService() if service exists</li>
-<li>[X] Generate <code>docker-compose.yml</code> file based on manifest file entries
-<ul>
-<li>[ ] Add functionality to append a service</li>
-<li>[ ] Add functionality to remove a service
-<ul>
-<li>[ ] Remove service when its removed from the manifest file</li>
-</ul></li>
-</ul></li>
-<li>[X] Refactor <code>GenerateManifests</code> and abstract the default environment generated</li>
-<li>[ ] Create <code>readme.go</code></li>
-<li>[ ] Replace <code>render.sh</code> with <code>pandoc.go</code> to execute <a href="https://github.com/jgm/pandoc">pandoc</a>
-<ul>
-<li>[ ] Render(src, target string) -&gt;<code>pandoc $src -o $target</code></li>
-<li>[ ] RenderWithTemplate(src, target, template string) -&gt; <code>pandoc $src -o $target --template=$template</code></li>
-</ul></li>
-<li>[X] Create localhost environments (default universes focused on a specific topic)
-<ul>
-<li>[X] Default</li>
-<li>[ ] Data science</li>
-<li>[ ] Livestreaming</li>
-<li>[ ] Pentesting</li>
-<li>[ ] Web development</li>
-<li>[ ] Writing (blogging, notes, …)</li>
-</ul></li>
 <li>[ ] Write tests
 <ul>
 <li>[ ] <code>manifests_test.go</code></li>
@@ -67,4 +27,70 @@
 <li>[ ] Automate way to change PORTs of existing projects like gitea</li>
 <li>[ ] GoDoc</li>
 <li>[ ] Review</li>
+</ul>
+<hr />
+<h2 id="for-manifests.go">For <code>manifests.go</code></h2>
+<ul>
+<li>[X] Create</li>
+<li>[X] Refactor <code>GenerateManifests</code> and abstract the default environment generated</li>
+<li>[X] Create localhost environments (default universes focused on a specific topic)
+<ul>
+<li>[X] Default</li>
+<li>[ ] Data science</li>
+<li>[ ] Livestreaming</li>
+<li>[ ] Pentesting</li>
+<li>[ ] Web development</li>
+<li>[ ] Writing (blogging, notes, …)</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="for-services.go">For <code>services.go</code></h2>
+<ul>
+<li>[X] Create</li>
+<li>[X] Implement <code>git pull</code> functionality in genService() if the service exists locally</li>
+<li>[X] Change serviceType to <code>fn func(name, port, link string)</code> and allow a func to be passed to generate any necessary the servicePath repository</li>
+<li>[ ] Use <code>readme.go</code> to generate a default README.md file in manifestPath dir</li>
+<li>[ ] Remove service when its removed from the manifest file</li>
+</ul>
+<hr />
+<h2 id="for-scan.go">For <code>scan.go</code></h2>
+<ul>
+<li>[X] Create</li>
+<li>[ ] Replace <code>ScanLocalhost</code> to an event driven for when a TCP/UDP port becomes active</li>
+</ul>
+<hr />
+<h2 id="for-dockercompose.go">For <code>dockercompose.go</code></h2>
+<ul>
+<li>[X] Create</li>
+<li>[X] Generate <code>docker-compose.yml</code> file based on manifest file entries</li>
+<li>[ ] Add functionality to append a service</li>
+<li>[ ] Add functionality to remove a service</li>
+</ul>
+<hr />
+<h2 id="for-pandoc.go">For <code>pandoc.go</code></h2>
+<ul>
+<li>[ ] Create</li>
+<li>[ ] Replace <code>render.sh</code> with <code>pandoc.go</code> to execute <a href="https://github.com/jgm/pandoc">pandoc</a></li>
+<li>[ ] create Render(src, target string) -&gt;<code>pandoc $src -o $target</code></li>
+<li>[ ] create RenderWithTemplate(src, target, template string) -&gt; <code>pandoc $src -o $target --template=$template</code></li>
+</ul>
+<hr />
+<h2 id="for-readme.go">For <code>readme.go</code></h2>
+<ul>
+<li>[ ] Create</li>
+</ul>
+<hr />
+<h2 id="for-git.go">For <code>git.go</code></h2>
+<ul>
+<li>[ ] Create</li>
+</ul>
+<hr />
+<h2 id="for-docs-and-root-readme.md">For <code>docs</code> and root README.md</h2>
+<ul>
+<li>[ ] Use <code>pandoc.go</code> to generate HTML files</li>
+</ul>
+<hr />
+<h2 id="for-docsports">For <code>docs/ports</code></h2>
+<ul>
+<li>[ ] Review layout and improve</li>
 </ul>

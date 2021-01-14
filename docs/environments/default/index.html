@@ -1,0 +1,91 @@
+<p>The default environment setup for a basic localhost universe. It includes a variety of services from the bias perspective of a thinker, a programmer, a gamer, a reader, and a questioner.</p>
+<h2 id="services">Services</h2>
+<ul>
+<li>functions
+<ul>
+<li>[X] sbh (stateless password panager)</li>
+<li>[X] quotitioner (curlable and REST available quotes)</li>
+</ul></li>
+<li>applications
+<ul>
+<li>[X] dont-panic-11238</li>
+<li>[X] gitea (git web UI)</li>
+<li>[X] www-archiver (http/s website archiver)</li>
+</ul></li>
+<li>individuals-blog
+<ul>
+<li>[X] fragglet-blog (creator/maintainer of chocolate-doom/freedoom)</li>
+<li>[X] rwxrob (creator/maintainer of readme.world/rwx.gg/pegn.dev)</li>
+<li>[X] jessfraz (crazy smart person who runs <em>everything</em> in docker - look up her rant on open source firmware)</li>
+</ul></li>
+<li><p>projects-blog</p></li>
+<li>docs
+<ul>
+<li>[X] freedoom-docs (website for freedoom)</li>
+<li>[X] rwx.gg (beginner boosts)</li>
+</ul></li>
+<li>fileserver
+<ul>
+<li>[X] mediafs (videos, audio, images, gifs, …)</li>
+<li>[X] library (html, pdfs, whitepapers, …)</li>
+<li>[X] directories (lists of lists: individuals, projects, …)</li>
+<li>[X] ptp (code snippets)</li>
+<li>[X] awesome-gitea (list of gitea projects)</li>
+</ul></li>
+<li>games
+<ul>
+<li>[X] chocolate-doom (cause DOOM)</li>
+<li>[X] quakespasm (cause Quake)</li>
+</ul></li>
+</ul>
+<h2 id="port-layout">Port Layout</h2>
+<ul>
+<li>9000-9999 - functions
+<ul>
+<li>9001 - sbh</li>
+<li>9429 - quotitioner</li>
+<li>9999 - gitea (currently 3000 (TODO))</li>
+</ul></li>
+<li>10000-19999 - applications
+<ul>
+<li>11238 (DONT PANIC!)</li>
+<li>11111 www-archiver</li>
+</ul></li>
+<li><p>20000-29999 - personal</p></li>
+<li>30000-39999 - games
+<ul>
+<li>30303 - doom (chocolate-doom)</li>
+<li>30304 - doom2 (chocolate-doom)</li>
+<li>31313 - quake (fteqw)</li>
+<li>31314 - quake2 (fteqw)</li>
+<li>31315 - quake3 (fteqw)</li>
+<li>32323 - chess (smallchesslib)</li>
+<li>34343 - amongst-us (amongst-us)</li>
+</ul></li>
+<li>40000-43999 - (individuals) blogs
+<ul>
+<li>40006 - fragglet-blog</li>
+<li>40007 - rwxrob-blog</li>
+<li>40008 - jessfraz-blog</li>
+</ul></li>
+<li>43999-44999 - (projects) blogs
+<ul>
+<li>43001 - go-blog</li>
+<li>43001 - gitea-blog</li>
+</ul></li>
+<li>45000-49999 - docs
+<ul>
+<li>45000 - rwx.gg</li>
+<li>46000 - freedoom-docs</li>
+<li>46001 - linode-docs</li>
+<li>49999 - godocs</li>
+</ul></li>
+<li>50000-59999 - fileservers
+<ul>
+<li>50000 - directories</li>
+<li>50001 - library</li>
+<li>50002 - ptp</li>
+<li>50700 - awesome-gitea</li>
+</ul></li>
+<li><p>60000-65535 - TODO: …</p></li>
+</ul>

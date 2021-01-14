@@ -19,13 +19,17 @@ The hope behind dont-panic-11238 is to give people the ability to replicate the 
 
 ## ***Getting Started***
 
-`go build && ./dont-panic-11238&`
+`make`
 
 once all of the services have been downloaded then run
 
-`docker-compose up --build --remove-orphans`
+`make services`
 
-finally goto `localhost:11238` on any browser
+finally goto `localhost:11238` on any browser (lynx, firefox, ...)
 
 ***Note:*** there are some services (like quakespasm) that arent web based and
 will have to be operated from its source.
+
+## **Documentation**
+
+[Available here](docs)

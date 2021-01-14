@@ -46,7 +46,6 @@ func DONTPANIC() {
 
 	// TODO: add manifest of standard/reserved service ports to check initially
 	// as a heartbeat analytics measure
-	log.Printf("Scanning localhost ...")
 	sTime := time.Now()
 
 	// TODO: Improve ...
@@ -54,7 +53,7 @@ func DONTPANIC() {
 
 	timeTaken = time.Since(sTime)
 	timeSince = time.Now()
-	log.Println("Finished scan of localhost ...")
+	log.Printf("ScanLocalhost took %s ...", timeTaken)
 }
 
 func init() {
@@ -78,9 +77,6 @@ func init() {
 func main() {
 	PORT := 11238
 	HOST := "0.0.0.0"
-
-	// Make the documentation of dont-panic-11238 available at `localhost:11238/docs`
-	http.Handle("/docs", http.FileServer(http.Dir("./docs")))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Refactor ...

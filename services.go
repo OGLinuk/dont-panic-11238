@@ -11,16 +11,16 @@ import (
 	"strings"
 )
 
-// GenerateService reads the manifest file located at servicePath, git clones, then
-// invokes the functions corresponding to serviceType
-//
-// TODO: Change serviceType to `fn func(name, port, link string)`
-// and allow a func to be passed to scaffold the servicePath repository
-func GenerateService(serviceName, serviceType, servicePath string) {
-	f, err := os.Open(servicePath)
+// GenerateService reads the manifest file (manifestPath) contents, then for
+// every service check if it exists. If it doesnt; clone it and call the passed
+// fn using the values: name, port, and git repo path. The fn func passed
+// should contain the logic to generate everything needed for the type of
+// service (ex: passing GenerateFileServer for a service of type docs).
+func GenerateService(manifestName, manifestPath string, fn func(name, port, link string)) {
+	f, err := os.Open(manifestPath)
 	if err != nil {
 		// TODO: Improve ...
-		log.Printf("genService::os.Open(%s)::ERROR: %s", servicePath, err.Error())
+		log.Printf("services.go::os.Open(%s)::ERROR: %s", manifestPath, err.Error())
 	}
 	defer f.Close()
 
@@ -34,7 +34,7 @@ func GenerateService(serviceName, serviceType, servicePath string) {
 		}
 
 		// Ex: services/functions/sbh-9001
-		toCheck := fmt.Sprintf("%s/%s/%s-%s", SERVICESDIR, serviceName, sc[0], sc[1])
+		toCheck := fmt.Sprintf("%s/%s/%s-%s", SERVICESDIR, manifestName, sc[0], sc[1])
 		result := checkExists(toCheck)
 
 		wg.Add(1)
@@ -45,14 +45,11 @@ func GenerateService(serviceName, serviceType, servicePath string) {
 				log.Printf("services.go: %s does not exists, [CLONING] now ...", toCheck)
 				if err = runCmd("git", "clone", sc[2], toCheck); err != nil {
 					// TODO: Retry X times before resulting to error
-					log.Printf("services::runCmd::gitCLONE::ERROR: %s", err.Error())
+					log.Printf("services.go::runCmd::gitCLONE::ERROR: %s", err.Error())
 				}
 
-				// TODO: Replace below with TODO of GenerateService
-				if serviceType == "fileserver" {
-					GenerateFileServer(sc[0], sc[1], toCheck)
-				} else {
-					// TODO: See above TODO
+				if fn != nil {
+					fn(sc[0], sc[1], toCheck)
 				}
 			} else {
 				log.Printf("services.go: %s exists, [UPDATING] now ...", toCheck)
@@ -108,23 +105,23 @@ func GenerateServices() {
 		manifestPath := fmt.Sprintf("%s/%s", MANIFESTSDIR, manifestName)
 		wg.Add(1)
 		go func(mp, manifestName string) {
-			var maniType string
+			var maniFunc func(name, port, link string)
 
 			defer wg.Done()
-			// TODO: Implement GenerateService TODO to replace this
+			// TODO: Figure out way to dynamically defined
 			if manifestName == "docs" {
-				maniType = "fileserver"
+				maniFunc = GenerateFileServer
 			} else if manifestName == "individuals-blog" {
-				maniType = "fileserver"
+				maniFunc = GenerateFileServer
 			} else if manifestName == "projects-blog" {
-				maniType = "fileserver"
+				maniFunc = GenerateFileServer
 			} else if manifestName == "fileserver" {
-				maniType = "fileserver"
+				maniFunc = GenerateFileServer
 			} else {
-				maniType = manifestName
+				maniFunc = nil
 			}
 
-			GenerateService(manifestName, maniType, mp)
+			GenerateService(manifestName, mp, maniFunc)
 		}(manifestPath, manifestName)
 	}
 	wg.Wait()

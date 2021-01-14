@@ -6,6 +6,11 @@ import (
 	"os"
 )
 
+var (
+	// BASEIMAGE used
+	BASEIMAGE = "golang:1.15"
+)
+
 // GenerateDockerfile using the given name and port values
 func GenerateDockerfile(name, port, path string) {
 	dockerfile, err := os.Create(fmt.Sprintf("%s/Dockerfile", path))
@@ -14,16 +19,14 @@ func GenerateDockerfile(name, port, path string) {
 	}
 	defer dockerfile.Close()
 
-	log.Printf("Generated Dockerfile at %s ...", path)
+	log.Printf("[docker.go] Generated Dockerfile at %s ...", path)
 	fullServiceName := fmt.Sprintf("%s-%s", name, port)
 
-	// TODO: Abstract behind a way to specify fill-in areas (ie FROM <base>)
-	dockerfile.WriteString(fmt.Sprintf(`FROM golang:1.15
-ADD . /go/src/%s
-WORKDIR /go/src/%s
-RUN go build -o %s-container
-EXPOSE %s
-CMD ["./%s-container"]`,
-		fullServiceName, fullServiceName, fullServiceName,
-		fmt.Sprintf("%s:%s", port, port), fullServiceName))
+	// TODO: better ...
+	dockerfile.WriteString(fmt.Sprintf("FROM %s", BASEIMAGE))
+	dockerfile.WriteString(fmt.Sprintf("ADD . /go/src/%s", fullServiceName))
+	dockerfile.WriteString(fmt.Sprintf("WORKDIR /go/src/%s", fullServiceName))
+	dockerfile.WriteString(fmt.Sprintf("RUN %s", fullServiceName))
+	dockerfile.WriteString(fmt.Sprintf("EXPOSE %s", fmt.Sprintf("%s:%s", port, port)))
+	dockerfile.WriteString(fmt.Sprintf("CMD [%s]", fullServiceName))
 }

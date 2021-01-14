@@ -2,6 +2,10 @@
 title: Environments
 ---
 
+## Environment Defaults
+
+* [`default`](default)
+
 ## Environment Manifest Types
 
 * `functions` - any stateless program

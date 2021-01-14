@@ -6,35 +6,53 @@ import (
 	"os"
 )
 
-// GenerateFileServer creates Dockerfile and main.go files using the given name and port at path
+var (
+	defaultMain = map[string][]string{
+		"import": []string{
+			"\"fmt\"",
+			"\"log\"",
+			"\"net/http\"",
+		},
+		"main": []string{
+			"http.Handle(\"/\", http.FileServer(http.Dir(\".\")))",
+			"log.Printf(\"Serving %s on %d ...\", NAME, PORT)",
+			"log.Fatal(http.ListenAndServe(fmt.Sprintf(\"0.0.0.0:%d\", PORT), nil))",
+		},
+	}
+)
+
+// GenerateFileServer creates a Dockerfile and a main.go file using the
+// given name, port, and path
 func GenerateFileServer(name, port, path string) {
 	GenerateDockerfile(name, port, path)
 
-	f, err := os.Create(fmt.Sprintf("%s/main.go", path))
+	maindotgo, err := os.Create(fmt.Sprintf("%s/main.go", path))
 	if err != nil {
 		log.Fatalf("fileserver.go::os.Create(%s/main.go)::ERROR: %s", path, err.Error())
 	}
-	defer f.Close()
+	defer maindotgo.Close()
 
-	// TODO: Same as dockerfile.go ...
-	f.WriteString(fmt.Sprintf(`package main
+	// TODO: Better ... There must be a way to store a template that name and
+	// port can be passed to, then written to maindotgo
+	maindotgo.WriteString("package main\n")
 
-import (
-	"fmt"
-	"log"
-	"net/http"
-)
+	maindotgo.WriteString("\nimport (\n")
+	for _, imp := range defaultMain["import"] {
+		maindotgo.WriteString(fmt.Sprintf("\t%s\n", imp))
+	}
+	maindotgo.WriteString("\n)")
 
-var (
-	NAME = "%s"
-	PORT = %s
-)
+	maindotgo.WriteString("\nvar (\n")
+	maindotgo.WriteString(fmt.Sprintf("\tNAME = \"%s\"\n", name))
+	maindotgo.WriteString(fmt.Sprintf("\tPORT = %s", port))
+	maindotgo.WriteString("\n)\n")
 
-func main() {
-	http.Handle("/", http.FileServer(http.Dir(".")))
-	log.Printf("Serving %s on %s ...", NAME, PORT)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", PORT), nil))
-}`, name, port, "%s", "%d", "%d"))
+	maindotgo.WriteString("\nfunc main() {\n")
+	for _, imp := range defaultMain["main"] {
+		maindotgo.WriteString(fmt.Sprintf("\t%s\n", imp))
+	}
+	maindotgo.WriteString("}\n")
 
-	// TODO: Do check to ensure the Dockerfile and main.go file were created
+	// TODO: Do check to ensure the Dockerfile and main.go file were created;
+	// if not, try X times before resorting to error
 }
