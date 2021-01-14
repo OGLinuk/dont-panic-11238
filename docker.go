@@ -23,10 +23,10 @@ func GenerateDockerfile(name, port, path string) {
 	fullServiceName := fmt.Sprintf("%s-%s", name, port)
 
 	// TODO: better ...
-	dockerfile.WriteString(fmt.Sprintf("FROM %s", BASEIMAGE))
-	dockerfile.WriteString(fmt.Sprintf("ADD . /go/src/%s", fullServiceName))
-	dockerfile.WriteString(fmt.Sprintf("WORKDIR /go/src/%s", fullServiceName))
-	dockerfile.WriteString(fmt.Sprintf("RUN %s", fullServiceName))
-	dockerfile.WriteString(fmt.Sprintf("EXPOSE %s", fmt.Sprintf("%s:%s", port, port)))
+	dockerfile.WriteString(fmt.Sprintf("FROM %s\n", BASEIMAGE))
+	dockerfile.WriteString(fmt.Sprintf("ADD . /go/src/%s\n", fullServiceName))
+	dockerfile.WriteString(fmt.Sprintf("WORKDIR /go/src/%s\n", fullServiceName))
+	dockerfile.WriteString(fmt.Sprintf("RUN %s\n", fullServiceName))
+	dockerfile.WriteString(fmt.Sprintf("EXPOSE %s\n", fmt.Sprintf("%s:%s", port, port)))
 	dockerfile.WriteString(fmt.Sprintf("CMD [%s]", fullServiceName))
 }
