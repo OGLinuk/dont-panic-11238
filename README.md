@@ -25,7 +25,7 @@ once all of the services have been downloaded then run
 
 `make services`
 
-finally goto `localhost:11238` on any browser (lynx, firefox, ...)
+finally goto [`localhost:11238`](http://localhost:11238) on any browser (lynx, firefox, ...)
 
 ***Note:*** there are some services (like quakespasm) that arent web based and
 will have to be operated from its source.

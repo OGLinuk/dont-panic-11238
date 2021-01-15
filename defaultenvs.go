@@ -18,7 +18,8 @@ var (
 				"jessfraz-blog 50008 https://github.com/jessfraz/blog.git",
 			},
 			"projects-blog": []string{
-				"golang-blog 50300 https://github.com/golang/blog.git",
+				// TODO: Uncomment when the ability to dynamically change port is implemented
+				//"golang-blog 50300 https://github.com/golang/blog.git",
 				"gitea-blog 50301 https://gitea.com/gitea/blog.git",
 			},
 			"docs": []string{
@@ -31,7 +32,8 @@ var (
 				"directories 50000 https://gitlab.com/oglinuk/directories.git",
 				"library 50001 https://gitlab.com/oglinuk/library.git",
 				"ptp 50002 https://github.com/oglinuk/ptp.git",
-				// "awesome-gitea 50700 https://gitea.com/gitea/awesome-gitea.git", // TODO: Uncomment when `pandoc.go` is implemented
+				// TODO: Uncomment when `pandoc.go` is implemented
+				// "awesome-gitea 50700 https://gitea.com/gitea/awesome-gitea.git",
 			},
 			"games": []string{
 				"chocolate-doom 30303 https://github.com/chocolate-doom/chocolate-doom.git",

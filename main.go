@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"testing"
 	"time"
 
 	"github.com/jasonlvhit/gocron"
@@ -57,6 +58,13 @@ func DONTPANIC() {
 }
 
 func init() {
+	// TODO: improve testing and figure out way to not need to do this
+	// "Fix" for flag provided but not defined: -test.timeout
+	// https://github.com/golang/go/issues/31859
+	testing.Init()
+}
+
+func main() {
 	flag.Parse()
 
 	f, err := os.OpenFile("main.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
@@ -72,9 +80,7 @@ func init() {
 		gocron.Every(*interval).Minutes().Do(DONTPANIC)
 		<-gocron.Start()
 	}()
-}
 
-func main() {
 	PORT := 11238
 	HOST := "0.0.0.0"
 

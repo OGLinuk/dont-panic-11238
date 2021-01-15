@@ -20,10 +20,10 @@ title: TODO
     * [ ] `manifests_test.go`
     * [ ] `services_test.go`
     * [ ] `fileserver_test.go`
-    * [ ] `dockerfile_test.go`
-    * [ ] `scan_test.go`
+    * [X] `dockerfile_test.go`
+    * [X] `scan_test.go`
     * [ ] `utils_test.go`
-    * [ ] `dockercompose.go`
+    * [X] `dockercompose.go`
 * [ ] Replace `Makefile` with [cmdtab](https://github.com/rwxrob/cmdtab)
 * [ ] Automate way to change PORTs of existing projects like gitea
 * [ ] GoDoc
