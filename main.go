@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strings"
 	"sync"
 	"testing"
@@ -16,8 +17,9 @@ import (
 )
 
 var (
-	interval = flag.Uint64("i", 15, "Interval to scan and check manifests/services (Default is 15)")
-	env      = flag.String("e", "default", "Environment to generate")
+	dontpanicInterval = flag.Uint64("dpi", 15, "Interval in minutes to execute DONTPANIC (Default is 15)")
+	scanInterval      = flag.Uint64("si", 1, "Interval in minutes to execute ScanLocalhost (Default is 1)")
+	env               = flag.String("e", "default", "Environment to generate")
 
 	// ROOTDIR is a directory containing the manifests and services directories used by dont-panic-11238
 	ROOTDIR = "DONTPANIC"
@@ -27,9 +29,9 @@ var (
 	SERVICESDIR          = fmt.Sprintf("%s/%s", ROOTDIR, "services")
 	err                  error
 	wg                   = &sync.WaitGroup{}
-	activeLocalhostPorts []string
 	timeTaken            time.Duration
 	timeSince            time.Time
+	activeLocalhostPorts map[int]struct{}
 )
 
 // DONTPANIC handles the manifests and services
@@ -44,17 +46,6 @@ func DONTPANIC() {
 	GenerateManifests(*env)
 	GenerateServices()
 	GenerateDockerCompose()
-
-	// TODO: add manifest of standard/reserved service ports to check initially
-	// as a heartbeat analytics measure
-	sTime := time.Now()
-
-	// TODO: Improve ...
-	activeLocalhostPorts = ScanLocalhost()
-
-	timeTaken = time.Since(sTime)
-	timeSince = time.Now()
-	log.Printf("ScanLocalhost took %s ...", timeTaken)
 }
 
 func init() {
@@ -67,6 +58,8 @@ func init() {
 func main() {
 	flag.Parse()
 
+	activeLocalhostPorts = make(map[int]struct{})
+
 	f, err := os.OpenFile("main.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatalf("Could not open log file ...")
@@ -77,8 +70,13 @@ func main() {
 
 	go DONTPANIC()
 	go func() {
-		gocron.Every(*interval).Minutes().Do(DONTPANIC)
+		gocron.Every(*dontpanicInterval).Minutes().Do(DONTPANIC)
 		<-gocron.Start()
+	}()
+
+	go ScanLocalhost()
+	go func() {
+		gocron.Every(*scanInterval).Minutes().Do(ScanLocalhost)
 	}()
 
 	PORT := 11238
@@ -87,10 +85,23 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Refactor ...
 		var portLinks []string
-		for _, port := range activeLocalhostPorts {
+		for port := range activeLocalhostPorts {
 			portLinks = append(portLinks,
-				fmt.Sprintf("<a href=\"http://%s\">%s</a>", port, strings.Split(port, ":")[1]))
+				fmt.Sprintf("<a href=\"http://localhost:%d\">%d</a>", port, port))
 		}
+		sort.Strings(portLinks)
+
+		// TODO: Refactor ...
+		var serviceLinks []string
+		for _, v := range DefaultEnvs[*env] {
+			for _, entry := range v {
+				parts := strings.Split(entry, " ")
+				serviceName := fmt.Sprintf("%s-%s", parts[0], parts[1])
+				serviceLinks = append(serviceLinks,
+					fmt.Sprintf("<br><a href=\"http://localhost:%d\">%s</a>", parts[1], serviceName))
+			}
+		}
+		sort.Strings(serviceLinks)
 
 		// TODO: Refactor using a template
 		fmt.Fprintf(w, `
@@ -105,7 +116,7 @@ func main() {
 			<p>
 			This page took %s to scan.
 			<br>
-			Scan interval: %d (minutes) - use '-i <1-60>' to change the interval
+			Scan interval: %d (minutes) - use '-si <1-60>' to change the interval
 			<br>
 			Last scan was %s.
 			</p><br><br>
@@ -114,7 +125,12 @@ func main() {
 			<b>Total Ports Active: %d</b><br><br>
 
 			%v
-		`, PORT, timeTaken, *interval, time.Since(timeSince), len(activeLocalhostPorts), portLinks)
+
+			<br>
+			<br>
+
+			%v
+		`, PORT, timeTaken, 1, time.Since(timeSince), len(activeLocalhostPorts), portLinks, serviceLinks)
 	})
 
 	log.Printf("Serving at localhost:%d ...", PORT)

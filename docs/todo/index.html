@@ -13,6 +13,7 @@
 <li>[X] Create way to configure scaffold with a git repository. (Ex: manifest/blogs)</li>
 <li>[X] Define the PORT layout for services the service sub-types (still WiP but draft is done)</li>
 <li>[X] Define environment manifest types (still WiP but draft is done)</li>
+<li>[ ] Pseudo-randomly assign a port to a service within the services rather than assiging a specific port?</li>
 <li>[ ] Write tests
 <ul>
 <li>[ ] <code>manifests_test.go</code></li>
@@ -32,6 +33,7 @@
 <h2 id="for-manifests.go">For <code>manifests.go</code></h2>
 <ul>
 <li>[X] Create</li>
+<li>[ ] Write test</li>
 <li>[X] Refactor <code>GenerateManifests</code> and abstract the default environment generated</li>
 <li>[X] Create localhost environments (default universes focused on a specific topic)
 <ul>
@@ -47,6 +49,7 @@
 <h2 id="for-services.go">For <code>services.go</code></h2>
 <ul>
 <li>[X] Create</li>
+<li>[ ] Write test</li>
 <li>[X] Implement <code>git pull</code> functionality in genService() if the service exists locally</li>
 <li>[X] Change serviceType to <code>fn func(name, port, link string)</code> and allow a func to be passed to generate any necessary the servicePath repository</li>
 <li>[ ] Use <code>readme.go</code> to generate a default README.md file in manifestPath dir</li>
@@ -56,20 +59,35 @@
 <h2 id="for-scan.go">For <code>scan.go</code></h2>
 <ul>
 <li>[X] Create</li>
+<li>[ ] Write test</li>
 <li>[ ] Replace <code>ScanLocalhost</code> to an event driven for when a TCP/UDP port becomes active</li>
 </ul>
 <hr />
 <h2 id="for-dockercompose.go">For <code>dockercompose.go</code></h2>
 <ul>
 <li>[X] Create</li>
+<li>[X] Write test</li>
 <li>[X] Generate <code>docker-compose.yml</code> file based on manifest file entries</li>
 <li>[ ] Add functionality to append a service</li>
 <li>[ ] Add functionality to remove a service</li>
 </ul>
 <hr />
+<h2 id="for-fileserver.go">For <code>fileserver.go</code></h2>
+<ul>
+<li>[X] Create</li>
+<li>[X] Write test</li>
+</ul>
+<hr />
+<h2 id="for-docker.go">For <code>docker.go</code></h2>
+<ul>
+<li>[X] Create</li>
+<li>[X] Write test</li>
+</ul>
+<hr />
 <h2 id="for-pandoc.go">For <code>pandoc.go</code></h2>
 <ul>
 <li>[ ] Create</li>
+<li>[ ] Write test</li>
 <li>[ ] Replace <code>render.sh</code> with <code>pandoc.go</code> to execute <a href="https://github.com/jgm/pandoc">pandoc</a></li>
 <li>[ ] create Render(src, target string) -&gt;<code>pandoc $src -o $target</code></li>
 <li>[ ] create RenderWithTemplate(src, target, template string) -&gt; <code>pandoc $src -o $target --template=$template</code></li>
@@ -78,11 +96,13 @@
 <h2 id="for-readme.go">For <code>readme.go</code></h2>
 <ul>
 <li>[ ] Create</li>
+<li>[ ] Write test</li>
 </ul>
 <hr />
 <h2 id="for-git.go">For <code>git.go</code></h2>
 <ul>
 <li>[ ] Create</li>
+<li>[ ] Write test</li>
 </ul>
 <hr />
 <h2 id="for-docs-and-root-readme.md">For <code>docs</code> and root README.md</h2>

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -21,37 +22,49 @@ var (
 	}
 )
 
+// GenerateMain .go file if one does not exist with content
+func GenerateMain(path string, content []byte) {
+	mainpath := fmt.Sprintf("%s/main.go", path)
+	if checkExists(mainpath) == false {
+		maindotgo, err := os.Create(mainpath)
+		if err != nil {
+			log.Printf("gomain.go::os.Create(%s)::ERROR: %s", mainpath, err.Error())
+		}
+		defer maindotgo.Close()
+
+		maindotgo.Write(content)
+	}
+}
+
 // GenerateFileServer creates a Dockerfile and a main.go file using the
 // given name, port, and path
 func GenerateFileServer(name, port, path string) {
 	GenerateDockerfile(name, port, path)
 
-	maindotgo, err := os.Create(fmt.Sprintf("%s/main.go", path))
-	if err != nil {
-		log.Fatalf("fileserver.go::os.Create(%s/main.go)::ERROR: %s", path, err.Error())
-	}
-	defer maindotgo.Close()
+	var buffer bytes.Buffer
 
 	// TODO: Better ... There must be a way to store a template that name and
 	// port can be passed to, then written to maindotgo
-	maindotgo.WriteString("package main\n")
+	buffer.WriteString("package main\n")
 
-	maindotgo.WriteString("\nimport (\n")
+	buffer.WriteString("\nimport (\n")
 	for _, imp := range defaultMain["import"] {
-		maindotgo.WriteString(fmt.Sprintf("\t%s\n", imp))
+		buffer.WriteString(fmt.Sprintf("\t%s\n", imp))
 	}
-	maindotgo.WriteString("\n)")
+	buffer.WriteString("\n)")
 
-	maindotgo.WriteString("\nvar (\n")
-	maindotgo.WriteString(fmt.Sprintf("\tNAME = \"%s\"\n", name))
-	maindotgo.WriteString(fmt.Sprintf("\tPORT = %s", port))
-	maindotgo.WriteString("\n)\n")
+	buffer.WriteString("\nvar (\n")
+	buffer.WriteString(fmt.Sprintf("\tNAME = \"%s\"\n", name))
+	buffer.WriteString(fmt.Sprintf("\tPORT = %s", port))
+	buffer.WriteString("\n)\n")
 
-	maindotgo.WriteString("\nfunc main() {\n")
+	buffer.WriteString("\nfunc main() {\n")
 	for _, imp := range defaultMain["main"] {
-		maindotgo.WriteString(fmt.Sprintf("\t%s\n", imp))
+		buffer.WriteString(fmt.Sprintf("\t%s\n", imp))
 	}
-	maindotgo.WriteString("}\n")
+	buffer.WriteString("}\n")
+
+	GenerateMain(path, buffer.Bytes())
 
 	// TODO: Do check to ensure the Dockerfile and main.go file were created;
 	// if not, try X times before resorting to error
