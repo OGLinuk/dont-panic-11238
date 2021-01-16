@@ -1,6 +1,9 @@
 # github.com/jasonlvhit/gocron v0.0.1
 ## explicit
 github.com/jasonlvhit/gocron
+# gitlab.com/rwxrob/cmdtab v0.2.1-alpha
+## explicit
+gitlab.com/rwxrob/cmdtab
 # gopkg.in/yaml.v2 v2.2.2
 ## explicit
 gopkg.in/yaml.v2
