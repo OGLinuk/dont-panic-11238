@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	dontpanic "gitlab.com/OGLinuk/dont-panic-11239"
+	dontpanic "gitlab.com/OGLinuk/dont-panic-11238"
 	"gitlab.com/rwxrob/cmdtab"
 )
 

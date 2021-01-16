@@ -1,11 +1,29 @@
-package main
+package dontpanic
 
 import (
 	"encoding/hex"
+	"fmt"
 	"hash/crc32"
 	"io"
 	"os"
 	"os/exec"
+	"sync"
+	"time"
+)
+
+var (
+	// ROOTDIR is a directory containing the manifests and services directories used by dont-panic-11238
+	ROOTDIR = "DONTPANIC"
+	// MANIFESTDIR is a directory containing the manifest files
+	MANIFESTSDIR = fmt.Sprintf("%s/%s", ROOTDIR, "manifests")
+	// SERVICEDIR is a directory containing the git repositories
+	SERVICESDIR = fmt.Sprintf("%s/%s", ROOTDIR, "services")
+
+	err         error
+	activePorts []string
+	wg          = &sync.WaitGroup{}
+	timeTaken   time.Duration
+	timeSince   time.Time
 )
 
 // checkExists always returns false, unless path exists

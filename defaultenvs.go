@@ -1,4 +1,4 @@
-package main
+package dontpanic
 
 var (
 	// DefaultEnvs is a map of default environments and their default manifests definitions
