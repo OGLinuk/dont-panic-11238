@@ -17,21 +17,21 @@ import (
 )
 
 var (
-	dontpanicInterval = flag.Uint64("dpi", 15, "Interval in minutes to execute DONTPANIC (Default is 15)")
-	scanInterval      = flag.Uint64("si", 1, "Interval in minutes to execute ScanLocalhost (Default is 1)")
-	env               = flag.String("e", "default", "Environment to generate")
+	interval = flag.Uint64("i", 15, "Interval in minutes to execute (Default is 15)")
+	env      = flag.String("e", "default", "Environment to generate")
 
 	// ROOTDIR is a directory containing the manifests and services directories used by dont-panic-11238
 	ROOTDIR = "DONTPANIC"
 	// MANIFESTDIR is a directory containing the manifest files
 	MANIFESTSDIR = fmt.Sprintf("%s/%s", ROOTDIR, "manifests")
 	// SERVICEDIR is a directory containing the git repositories
-	SERVICESDIR          = fmt.Sprintf("%s/%s", ROOTDIR, "services")
-	err                  error
-	wg                   = &sync.WaitGroup{}
-	timeTaken            time.Duration
-	timeSince            time.Time
-	activeLocalhostPorts map[int]struct{}
+	SERVICESDIR = fmt.Sprintf("%s/%s", ROOTDIR, "services")
+
+	err         error
+	activePorts []string
+	wg          = &sync.WaitGroup{}
+	timeTaken   time.Duration
+	timeSince   time.Time
 )
 
 // DONTPANIC handles the manifests and services
@@ -46,6 +46,8 @@ func DONTPANIC() {
 	GenerateManifests(*env)
 	GenerateServices()
 	GenerateDockerCompose()
+
+	activePorts = ScanLocalhost()
 }
 
 func init() {
@@ -58,8 +60,6 @@ func init() {
 func main() {
 	flag.Parse()
 
-	activeLocalhostPorts = make(map[int]struct{})
-
 	f, err := os.OpenFile("main.log", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatalf("Could not open log file ...")
@@ -70,13 +70,7 @@ func main() {
 
 	go DONTPANIC()
 	go func() {
-		gocron.Every(*dontpanicInterval).Minutes().Do(DONTPANIC)
-		<-gocron.Start()
-	}()
-
-	go ScanLocalhost()
-	go func() {
-		gocron.Every(*scanInterval).Minutes().Do(ScanLocalhost)
+		gocron.Every(*interval).Minutes().Do(DONTPANIC)
 	}()
 
 	PORT := 11238
@@ -85,7 +79,7 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Refactor ...
 		var portLinks []string
-		for port := range activeLocalhostPorts {
+		for port := range activePorts {
 			portLinks = append(portLinks,
 				fmt.Sprintf("<a href=\"http://localhost:%d\">%d</a>", port, port))
 		}
@@ -130,7 +124,7 @@ func main() {
 			<br>
 
 			%v
-		`, PORT, timeTaken, 1, time.Since(timeSince), len(activeLocalhostPorts), portLinks, serviceLinks)
+		`, PORT, timeTaken, 1, time.Since(timeSince), len(activePorts), portLinks, serviceLinks)
 	})
 
 	log.Printf("Serving at localhost:%d ...", PORT)

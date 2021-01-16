@@ -20,35 +20,25 @@ func Heartbeat(addr string) bool {
 }
 
 // ScanLocalhost ports
-func ScanLocalhost() {
+func ScanLocalhost() []string {
+	var active []string
+
 	// TODO: add manifest of standard/reserved service ports to check initially
 	// as a heartbeat analytics measure
 	sTime := time.Now()
 
-	//j := 0
-
 	// No point in checking < 22 really, but leaving
 	// at 2 until absolutely necessary
 	for i := 2; i < 65535; i++ {
-		// if j == 1000 {
-		// 	time.Sleep(time.Second * 1)
-		// 	j = 0
-		// }
-		// j++
-		// go func(i int) {
-		// TODO: run Heartbeat concurretly, *and consistently*.
 		localAddr := fmt.Sprintf("localhost:%d", i)
 		if Heartbeat(localAddr) == true {
-			activeLocalhostPorts[i] = struct{}{}
-		} else {
-			if _, exists := activeLocalhostPorts[i]; exists {
-				delete(activeLocalhostPorts, i)
-			}
+			active = append(active, localAddr)
 		}
-		// }(i)
 	}
 
 	timeTaken = time.Since(sTime)
 	timeSince = time.Now()
 	log.Printf("ScanLocalhost took %s ...", timeTaken)
+
+	return active
 }
