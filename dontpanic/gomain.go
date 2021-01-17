@@ -3,8 +3,6 @@ package dontpanic
 import (
 	"bytes"
 	"fmt"
-	"log"
-	"os"
 )
 
 var (
@@ -21,20 +19,6 @@ var (
 		},
 	}
 )
-
-// GenerateMain .go file if one does not exist with content
-func GenerateMain(path string, content []byte) {
-	mainpath := fmt.Sprintf("%s/main.go", path)
-	if checkExists(mainpath) == false {
-		maindotgo, err := os.Create(mainpath)
-		if err != nil {
-			log.Printf("gomain.go::os.Create(%s)::ERROR: %s", mainpath, err.Error())
-		}
-		defer maindotgo.Close()
-
-		maindotgo.Write(content)
-	}
-}
 
 // GenerateFileServer creates a Dockerfile and a main.go file using the
 // given name, port, and path
@@ -64,7 +48,7 @@ func GenerateFileServer(name, port, path string) {
 	}
 	buffer.WriteString("}\n")
 
-	GenerateMain(path, buffer.Bytes())
+	GenerateFile(fmt.Sprintf("%s/main.go", path), buffer.Bytes())
 
 	// TODO: Do check to ensure the Dockerfile and main.go file were created;
 	// if not, try X times before resorting to error

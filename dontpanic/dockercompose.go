@@ -36,7 +36,7 @@ func appendService(dc *dockercompose, ds dockerservice) {
 }
 
 // GenerateDockerCompose file with all entries of all manifest files in DONTPANIC/manifests
-func GenerateDockerCompose() {
+func GenerateDockerCompose() error {
 	dc := &dockercompose{
 		Version:  DOCKERCOMPOSEVERSION,
 		Services: make(map[string]dockerservice),
@@ -47,7 +47,7 @@ func GenerateDockerCompose() {
 
 	dcf, err := os.Create(dcFilename)
 	if err != nil {
-		log.Printf("dockercompose.go::os.Create(%s)::ERROR: %s", dcFilename, err.Error())
+		return fmt.Errorf("dockercompose.go::os.Create(%s)::ERROR: %s", dcFilename, err.Error())
 	}
 	defer dcf.Close()
 
@@ -56,7 +56,7 @@ func GenerateDockerCompose() {
 	manifests, err := ioutil.ReadDir(MANIFESTSDIR)
 	if err != nil {
 		// TODO: Generate defaults X times before erroring
-		log.Printf("dockercompose.go::ioutil.ReadDir(%s)::ERROR: %s", MANIFESTSDIR, err.Error())
+		return fmt.Errorf("dockercompose.go::ioutil.ReadDir(%s)::ERROR: %s", MANIFESTSDIR, err.Error())
 	}
 
 	// For every manifest file, read its contents and download/update entries
@@ -69,7 +69,7 @@ func GenerateDockerCompose() {
 			manif, err := os.Open(manifestPath)
 			if err != nil {
 				// TODO: Improve ...
-				log.Printf("dockercompose.go::os.Open(%s)::ERROR: %s", manifestPath, err.Error())
+				return fmt.Errorf("dockercompose.go::os.Open(%s)::ERROR: %s", manifestPath, err.Error())
 			}
 			defer manif.Close()
 
@@ -103,8 +103,9 @@ func GenerateDockerCompose() {
 
 	data, err := yaml.Marshal(&dc)
 	if err != nil {
-		log.Printf("dockercompose.go::yaml.Marshal::ERROR: %s", err.Error())
+		return fmt.Errorf("dockercompose.go::yaml.Marshal::ERROR: %s", err.Error())
 	}
 
 	dcf.Write(data)
+	return nil
 }

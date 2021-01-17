@@ -7,8 +7,6 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"sync"
-	"time"
 )
 
 var (
@@ -19,15 +17,11 @@ var (
 	// SERVICEDIR is a directory containing the git repositories
 	SERVICESDIR = fmt.Sprintf("%s/%s", ROOTDIR, "services")
 
-	err         error
-	activePorts []string
-	wg          = &sync.WaitGroup{}
-	timeTaken   time.Duration
-	timeSince   time.Time
+	err error
 )
 
-// checkExists always returns false, unless path exists
-func checkExists(path string) bool {
+// CheckExists always returns false, unless path exists
+func CheckExists(path string) bool {
 	if _, err = os.Stat(path); err == nil {
 		return true
 	}
@@ -46,8 +40,8 @@ func runCmd(cmd string, args ...string) error {
 	return nil
 }
 
-// crc32Checksum of path
-func crc32Checksum(path string) (string, error) {
+// Checksum of path using a crc32 hash
+func Checksum(path string) (string, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return "", err
@@ -60,4 +54,18 @@ func crc32Checksum(path string) (string, error) {
 	}
 
 	return hex.EncodeToString(hash.Sum(nil)), nil
+}
+
+// GenerateFile path if it does not exist with content
+func GenerateFile(path string, content []byte) error {
+	if !CheckExists(path) {
+		f, err := os.Create(path)
+		if err != nil {
+			return fmt.Errorf("gomain.go::os.Create(%s)::ERROR: %s", path, err.Error())
+		}
+		defer f.Close()
+
+		f.Write(content)
+	}
+	return nil
 }

@@ -7,13 +7,13 @@ import (
 	"time"
 )
 
-// Heartbeat dials a (network) "tcp" (addr) "localhost:9001". If the dial returns
-// a response (err == nil), return true; else return false (default).
+// Heartbeat dials a (network) "tcp" (addr) "localhost:9001" with a timeout of
+// 400 milliseconds. If the dial returns a response (err == nil), return true;
+// else return false (default).
 func Heartbeat(addr string) bool {
 	// TODO: Improve ...
-	_, err := net.Dial("tcp", addr) //DialTimeout("tcp", addr, time.Microsecond*400)
+	_, err := net.DialTimeout("tcp", addr, time.Millisecond*400)
 	if err == nil {
-		log.Printf("Service running on port %s ...", addr)
 		return true
 	}
 	return false
@@ -23,7 +23,7 @@ func Heartbeat(addr string) bool {
 func ScanLocalhost() []string {
 	var active []string
 
-	// TODO: add manifest of standard/reserved service ports to check initially
+	// TODO: add manifest of defined service ports to check initially
 	// as a heartbeat analytics measure
 	sTime := time.Now()
 
@@ -36,8 +36,7 @@ func ScanLocalhost() []string {
 		}
 	}
 
-	timeTaken = time.Since(sTime)
-	timeSince = time.Now()
+	timeTaken := time.Since(sTime)
 	log.Printf("ScanLocalhost took %s ...", timeTaken)
 
 	return active

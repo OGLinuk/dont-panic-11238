@@ -9,38 +9,27 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"testing"
 	"time"
 
 	"github.com/jasonlvhit/gocron"
+	"gitlab.com/OGLinuk/dont-panic-11238/dontpanic"
 )
 
 var (
-	interval = flag.Uint64("i", 15, "Interval in minutes to execute (Default is 15)")
-	env      = flag.String("e", "default", "Environment to generate")
+	interval    = flag.Uint64("i", 15, "Interval in minutes to execute (Default is 15)")
+	env         = flag.String("e", "default", "Environment to generate")
+	err         error
+	timeTaken   time.Duration
+	timeSince   time.Time
+	activePorts []string
 )
 
-// DONTPANIC handles the manifests and services
+// DONTPANIC generates manifests (of *env), services, and docker-compose.yml
 func DONTPANIC() {
 	log.Println("=== DONTPANIC ===")
-	if _, err = os.Stat(ROOTDIR); err != nil {
-		if err = os.MkdirAll(ROOTDIR, 0744); err != nil {
-			log.Fatalf("os.MkdirAll(%s)::ERROR: %s", ROOTDIR, err.Error())
-		}
-	}
-
-	GenerateManifests(*env)
-	GenerateServices()
-	GenerateDockerCompose()
-
-	activePorts = ScanLocalhost()
-}
-
-func init() {
-	// TODO: improve testing and figure out way to not need to do this
-	// "Fix" for flag provided but not defined: -test.timeout
-	// https://github.com/golang/go/issues/31859
-	testing.Init()
+	dontpanic.GenerateManifests(*env)
+	dontpanic.GenerateServices()
+	dontpanic.GenerateDockerCompose()
 }
 
 func main() {
@@ -54,9 +43,20 @@ func main() {
 	mw := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(mw)
 
-	go DONTPANIC()
 	go func() {
+		DONTPANIC()
 		gocron.Every(*interval).Minutes().Do(DONTPANIC)
+	}()
+
+	go func() {
+		activePorts = dontpanic.ScanLocalhost()
+		gocron.Every(1).Minutes().Do(func() {
+			sTime := time.Now()
+			activePorts = dontpanic.ScanLocalhost()
+			timeSince = time.Now()
+			timeTaken = time.Since(sTime)
+		})
+		<-gocron.Start()
 	}()
 
 	PORT := 11238
@@ -65,20 +65,23 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Refactor ...
 		var portLinks []string
-		for port := range activePorts {
+		for _, addr := range activePorts {
 			portLinks = append(portLinks,
-				fmt.Sprintf("<a href=\"http://localhost:%d\">%d</a>", port, port))
+				fmt.Sprintf("<a href=\"http://%s\">%s</a>", addr, strings.Split(addr, ":")[1]))
 		}
 		sort.Strings(portLinks)
 
 		// TODO: Refactor ...
 		var serviceLinks []string
-		for _, v := range DefaultEnvs[*env] {
-			for _, entry := range v {
-				parts := strings.Split(entry, " ")
-				serviceName := fmt.Sprintf("%s-%s", parts[0], parts[1])
-				serviceLinks = append(serviceLinks,
-					fmt.Sprintf("<br><a href=\"http://localhost:%d\">%s</a>", parts[1], serviceName))
+		for k, v := range dontpanic.DefaultEnvs[*env] {
+			// TODO: Filter better; no reason to show services like games if theyre not web based
+			if k != "games" {
+				for _, entry := range v {
+					parts := strings.Split(entry, " ")
+					serviceName := fmt.Sprintf("%s-%s", parts[0], parts[1])
+					serviceLinks = append(serviceLinks,
+						fmt.Sprintf("<br><a href=\"http://localhost:%s\">%s</a>", parts[1], serviceName))
+				}
 			}
 		}
 		sort.Strings(serviceLinks)
@@ -96,7 +99,7 @@ func main() {
 			<p>
 			This page took %s to scan.
 			<br>
-			Scan interval: %d (minutes) - use '-si <1-60>' to change the interval
+			Scan interval: %d (minutes) - use '-i <1-60>' to change the interval
 			<br>
 			Last scan was %s.
 			</p><br><br>
