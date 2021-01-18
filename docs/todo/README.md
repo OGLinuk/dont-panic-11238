@@ -1,6 +1,4 @@
----
-title: TODO
----
+# TODO
 
 ## For TODO
 
@@ -25,7 +23,7 @@ title: TODO
     * [X] `scan_test.go`
     * [ ] `utils_test.go`
     * [X] `dockercompose.go`
-* [ ] Replace `Makefile` with [cmdtab](https://github.com/rwxrob/cmdtab)
+* [X] Implement [cmdtab](https://github.com/rwxrob/cmdtab)
 * [ ] Automate way to change PORTs of existing projects like gitea
 * [ ] GoDoc
 * [ ] Review
@@ -52,6 +50,7 @@ title: TODO
 * [X] Create
 * [ ] Write test
 * [X] Implement `git pull` functionality in genService() if the service exists locally
+	* [ ] Replace current implementation (using runCmd) with [go-git](https://github.com/go-git/go-git)
 * [X] Change serviceType to `fn func(name, port, link string)` and allow a func to be passed to generate any necessary the servicePath repository
 * [ ] Use `readme.go` to generate a default README.md file in manifestPath dir
 * [ ] Remove service when its removed from the manifest file
@@ -62,7 +61,6 @@ title: TODO
 
 * [X] Create
 * [ ] Write test
-* [ ] Replace `ScanLocalhost` to an event driven for when a TCP/UDP port becomes active
 
 ---
 

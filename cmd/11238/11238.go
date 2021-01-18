@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	x := cmdtab.New("11238", "scan")
+	x := cmdtab.New("11238", "scan", "generate", "checkexists")
 	x.Default = "scan"
 	x.Summary = `utility to interact with dont-panic-11238`
 	x.Version = "1.0.0"

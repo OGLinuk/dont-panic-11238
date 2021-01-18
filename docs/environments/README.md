@@ -1,6 +1,4 @@
----
-title: Environments
----
+# Environments
 
 ## Environment Defaults
 

@@ -16,8 +16,11 @@ import (
 )
 
 var (
-	interval    = flag.Uint64("i", 15, "Interval in minutes to execute (Default is 15)")
-	env         = flag.String("e", "default", "Environment to generate")
+	interval = flag.Uint64("i", 15, "Interval in minutes to execute (Default is 15)")
+	env      = flag.String("e", "default", "Environment to generate")
+
+	host        = "0.0.0.0"
+	port        = 11238
 	err         error
 	timeTaken   time.Duration
 	timeSince   time.Time
@@ -39,6 +42,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not open log file ...")
 	}
+	defer f.Close()
 
 	mw := io.MultiWriter(os.Stdout, f)
 	log.SetOutput(mw)
@@ -49,18 +53,19 @@ func main() {
 	}()
 
 	go func() {
+		sTime := time.Now()
 		activePorts = dontpanic.ScanLocalhost()
+		timeSince = time.Now()
+		timeTaken = time.Since(sTime)
 		gocron.Every(1).Minutes().Do(func() {
-			sTime := time.Now()
+			sTime = time.Now()
 			activePorts = dontpanic.ScanLocalhost()
 			timeSince = time.Now()
 			timeTaken = time.Since(sTime)
 		})
+		log.Printf("Serving at localhost:%d ...", port)
 		<-gocron.Start()
 	}()
-
-	PORT := 11238
-	HOST := "0.0.0.0"
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// TODO: Refactor ...
@@ -113,9 +118,7 @@ func main() {
 			<br>
 
 			%v
-		`, PORT, timeTaken, 1, time.Since(timeSince), len(activePorts), portLinks, serviceLinks)
+		`, port, timeTaken, 1, time.Since(timeSince), len(activePorts), portLinks, serviceLinks)
 	})
-
-	log.Printf("Serving at localhost:%d ...", PORT)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", HOST, PORT), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), nil))
 }

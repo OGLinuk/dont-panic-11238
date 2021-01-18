@@ -1,6 +1,4 @@
----
-title: Documentation
----
+# Documentation
 
 The various documentation for dont-panic-11238.
 

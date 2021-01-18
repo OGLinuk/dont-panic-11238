@@ -14,5 +14,4 @@ walk() {
     cd ..
 }
 
-# Change docs to $* if necessary
-walk docs
+walk $*

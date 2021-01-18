@@ -1,3 +1,4 @@
+<h1 id="todo">TODO</h1>
 <h2 id="for-todo">For TODO</h2>
 <ul>
 <li>[ ] Organize better</li>
@@ -24,7 +25,7 @@
 <li>[ ] <code>utils_test.go</code></li>
 <li>[X] <code>dockercompose.go</code></li>
 </ul></li>
-<li>[ ] Replace <code>Makefile</code> with <a href="https://github.com/rwxrob/cmdtab">cmdtab</a></li>
+<li>[X] Implement <a href="https://github.com/rwxrob/cmdtab">cmdtab</a></li>
 <li>[ ] Automate way to change PORTs of existing projects like gitea</li>
 <li>[ ] GoDoc</li>
 <li>[ ] Review</li>
@@ -50,7 +51,10 @@
 <ul>
 <li>[X] Create</li>
 <li>[ ] Write test</li>
-<li>[X] Implement <code>git pull</code> functionality in genService() if the service exists locally</li>
+<li>[X] Implement <code>git pull</code> functionality in genService() if the service exists locally
+<ul>
+<li>[ ] Replace current implementation (using runCmd) with <a href="https://github.com/go-git/go-git">go-git</a></li>
+</ul></li>
 <li>[X] Change serviceType to <code>fn func(name, port, link string)</code> and allow a func to be passed to generate any necessary the servicePath repository</li>
 <li>[ ] Use <code>readme.go</code> to generate a default README.md file in manifestPath dir</li>
 <li>[ ] Remove service when its removed from the manifest file</li>
@@ -60,7 +64,6 @@
 <ul>
 <li>[X] Create</li>
 <li>[ ] Write test</li>
-<li>[ ] Replace <code>ScanLocalhost</code> to an event driven for when a TCP/UDP port becomes active</li>
 </ul>
 <hr />
 <h2 id="for-dockercompose.go">For <code>dockercompose.go</code></h2>

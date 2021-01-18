@@ -8,11 +8,11 @@ import (
 )
 
 // Heartbeat dials a (network) "tcp" (addr) "localhost:9001" with a timeout of
-// 400 milliseconds. If the dial returns a response (err == nil), return true;
+// 400 microseconds. If the dial returns a response (err == nil), return true;
 // else return false (default).
 func Heartbeat(addr string) bool {
 	// TODO: Improve ...
-	_, err := net.DialTimeout("tcp", addr, time.Millisecond*400)
+	_, err := net.DialTimeout("tcp", addr, time.Microsecond*400)
 	if err == nil {
 		return true
 	}

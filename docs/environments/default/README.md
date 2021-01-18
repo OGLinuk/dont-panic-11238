@@ -1,6 +1,4 @@
----
-title: Default Environment
----
+# Default Environment
 
 The default environment setup for a basic localhost universe. It includes a variety of services from the bias perspective of a thinker, a programmer, a gamer, a reader, and a questioner.
 

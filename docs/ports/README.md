@@ -1,6 +1,4 @@
----
-title: Ports
----
+# Ports
 
 The documentation around the port standards used by dont-panic-11238. There are only 65535 ports to work with and an infinite things that can run on them.
 

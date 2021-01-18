@@ -22,8 +22,10 @@ var (
 
 // GenerateFileServer creates a Dockerfile and a main.go file using the
 // given name, port, and path
-func GenerateFileServer(name, port, path string) {
-	GenerateDockerfile(name, port, path)
+func GenerateFileServer(name, port, path string) error {
+	if err = GenerateDockerfile(name, port, path); err != nil {
+		return err
+	}
 
 	var buffer bytes.Buffer
 
@@ -48,8 +50,11 @@ func GenerateFileServer(name, port, path string) {
 	}
 	buffer.WriteString("}\n")
 
-	GenerateFile(fmt.Sprintf("%s/main.go", path), buffer.Bytes())
+	if err = GenerateFile(fmt.Sprintf("%s/main.go", path), buffer.Bytes()); err != nil {
+		return err
+	}
 
 	// TODO: Do check to ensure the Dockerfile and main.go file were created;
 	// if not, try X times before resorting to error
+	return nil
 }

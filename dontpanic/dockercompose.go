@@ -68,7 +68,6 @@ func GenerateDockerCompose() error {
 
 			manif, err := os.Open(manifestPath)
 			if err != nil {
-				// TODO: Improve ...
 				return fmt.Errorf("dockercompose.go::os.Open(%s)::ERROR: %s", manifestPath, err.Error())
 			}
 			defer manif.Close()

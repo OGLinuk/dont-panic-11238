@@ -16,18 +16,22 @@ func TestGenerateDockerCompose(t *testing.T) {
 	expected := "5b712562"
 
 	if _, err = os.Stat(manifestsPath); err != nil {
-		GenerateManifests("default")
+		if err = GenerateManifests("default"); err != nil {
+			t.Fatalf("Expected nil; Got: %s", err.Error())
+		}
 	}
 
-	GenerateDockerCompose()
+	if err = GenerateDockerCompose(); err != nil {
+		t.Fatalf("Expected nil; Got: %s", err.Error())
+	}
 
 	if _, err = os.Stat(dockercomposefn); err != nil {
 		t.Fatalf("Expected nil; Got: %s", err.Error())
 	} else {
-		actual, err := crc32Checksum(dockercomposefn)
-		//os.RemoveAll(dockercomposefn)
+		actual, err := Checksum(dockercomposefn)
+		os.RemoveAll(dockercomposefn)
 		if err != nil {
-			t.Fatalf("crc32Checksum::ERROR: %s", err.Error())
+			t.Fatalf("Expected nil; Got: %s", err.Error())
 		}
 
 		if actual != expected {

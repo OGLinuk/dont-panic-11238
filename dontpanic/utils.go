@@ -52,7 +52,6 @@ func Checksum(path string) (string, error) {
 	if _, err = io.Copy(hash, f); err != nil {
 		return "", err
 	}
-
 	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 

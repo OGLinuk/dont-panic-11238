@@ -14,11 +14,10 @@ import (
 // fn using the values: name, port, and git repo path. The fn func passed
 // should contain the logic to generate everything needed for the type of
 // service (ex: passing GenerateFileServer for a service of type docs).
-func GenerateService(manifestName, manifestPath string, fn func(name, port, link string)) {
+func GenerateService(manifestName, manifestPath string, fn func(name, port, link string) error) error {
 	f, err := os.Open(manifestPath)
 	if err != nil {
-		// TODO: Improve ...
-		log.Fatalf("services.go::os.Open(%s)::ERROR: %s", manifestPath, err.Error())
+		return fmt.Errorf("services.go::os.Open(%s)::ERROR: %s", manifestPath, err.Error())
 	}
 	defer f.Close()
 
@@ -28,18 +27,18 @@ func GenerateService(manifestName, manifestPath string, fn func(name, port, link
 		sc := strings.Split(service, " ")
 
 		if len(sc) != 3 {
-			log.Fatalf("service [%s] does not have all 3 required components <name> <port> <link>", service)
+			return fmt.Errorf("service [%s] does not have all 3 required components <name> <port> <link>", service)
 		}
 
 		// Ex: services/functions/sbh-9001
 		toCheck := fmt.Sprintf("%s/%s/%s-%s", SERVICESDIR, manifestName, sc[0], sc[1])
-		go func() {
+		go func() error {
 			// TODO: Change below to use go git
 			if CheckExists(toCheck) == false {
 				log.Printf("services.go: %s does not exists, [CLONING] now ...", toCheck)
 				if err = runCmd("git", "clone", sc[2], toCheck); err != nil {
 					// TODO: Retry X times before resulting to error
-					log.Fatalf("services.go::runCmd::gitCLONE::ERROR: %s", err.Error())
+					return fmt.Errorf("GenerateService::runCmd::gitCLONE: %s", err.Error())
 				}
 
 				if fn != nil {
@@ -48,19 +47,21 @@ func GenerateService(manifestName, manifestPath string, fn func(name, port, link
 			} else {
 				log.Printf("services.go: %s exists, [UPDATING] now ...", toCheck)
 				if err = runCmd("git", "-C", toCheck, "pull"); err != nil {
-					log.Fatalf("services.go::runCmd::ERROR:%s", err.Error())
+					return fmt.Errorf("GenerateService::runCmd::gitPULL: %s", err.Error())
 				}
 			}
+			return nil
 		}()
 	}
+	return nil
 }
 
 // GenerateServices defined in all manifest files located in MANIFESTSDIR
-func GenerateServices() {
+func GenerateServices() error {
 	// Ensure `services` directory exists
 	if !CheckExists(SERVICESDIR) {
 		if err = os.MkdirAll(SERVICESDIR, 0744); err != nil {
-			log.Fatalf("services.go::checkExists(%s)::ERROR: %s", SERVICESDIR, err.Error())
+			return fmt.Errorf("GenerateServices::os.MkdirAll(%s): %s", SERVICESDIR, err.Error())
 		}
 	}
 
@@ -69,7 +70,7 @@ func GenerateServices() {
 	manifests, err := ioutil.ReadDir(MANIFESTSDIR)
 	if err != nil {
 		// TODO: Generate defaults X times before erroring
-		log.Fatalf("services.go::ioutil.ReadDir(%s)::ERROR: %s", MANIFESTSDIR, err.Error())
+		return fmt.Errorf("GenerateServices::ioutil.ReadDir(%s): %s", MANIFESTSDIR, err.Error())
 	}
 
 	// For every manifest file, read its contents and download/update entries
@@ -81,13 +82,13 @@ func GenerateServices() {
 			// TODO: When `readme.go` is implemented, create a default README.md file in servicesPath dir
 			// if one does not exists, then render with `doc.go`
 			if err = os.MkdirAll(servicesPath, 0744); err != nil {
-				log.Fatalf("services.go::os.MkdirAll(%s)::ERROR:%s", servicesPath, err.Error())
+				return fmt.Errorf("GenerateServices::os.MkdirAll(%s):%s", servicesPath, err.Error())
 			}
 		}
 
 		manifestPath := fmt.Sprintf("%s/%s", MANIFESTSDIR, manifestName)
-		go func(mp, manifestName string) {
-			var maniFunc func(name, port, link string)
+		go func(mp, manifestName string) error {
+			var maniFunc func(name, port, link string) error
 			if manifestName == "docs" {
 				maniFunc = GenerateFileServer
 			} else if manifestName == "individuals-blog" {
@@ -99,8 +100,11 @@ func GenerateServices() {
 			} else {
 				maniFunc = nil
 			}
-
-			GenerateService(manifestName, mp, maniFunc)
+			if err = GenerateService(manifestName, mp, maniFunc); err != nil {
+				return err
+			}
+			return nil
 		}(manifestPath, manifestName)
 	}
+	return nil
 }

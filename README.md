@@ -1,6 +1,4 @@
----
-title: dont-panic:11238
----
+# dont-panic:11238
 
 ## A guide to the universe of ***your*** **localhost(s)**.
 

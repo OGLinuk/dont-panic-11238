@@ -1,6 +1,4 @@
----
-title: Services
----
+# Services
 
 ## What is a Service
 
