@@ -88,13 +88,14 @@
 
 ---
 
-## For `pandoc.go`
+## For `doc.go`
 
-* [ ] Create
+* [X] Create
 * [ ] Write test
-* [ ] Replace `render.sh` with `pandoc.go` to execute [pandoc](https://github.com/jgm/pandoc)
-* [ ] create Render(src, target string) ->`pandoc $src -o $target`
-* [ ] create RenderWithTemplate(src, target, template string) -> `pandoc $src -o $target --template=$template`
+* [X] Replace `render.sh` with `doc.go` to execute [pandoc](https://github.com/jgm/pandoc)
+* [ ] Create Render(src, target string) ->`pandoc $src -o $target`
+* [ ] Create RenderWithTemplate(src, target, template string) -> `pandoc $src -o $target --template=$template`
+* [ ] Replace pandoc with a pegn parser
 
 ---
 
@@ -114,7 +115,7 @@
 
 ## For `docs` and root README.md
 
-* [ ] Use `pandoc.go` to generate HTML files
+* [X] Use `doc.go` to generate HTML files
 
 ---
 
