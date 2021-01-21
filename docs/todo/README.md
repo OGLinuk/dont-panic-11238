@@ -93,7 +93,7 @@
 * [X] Create
 * [ ] Write test
 * [X] Replace `render.sh` with `doc.go` to execute [pandoc](https://github.com/jgm/pandoc)
-* [ ] Create Render(src, target string) ->`pandoc $src -o $target`
+* [X] Create Render(src, target string) ->`pandoc $src -o $target`
 * [ ] Create RenderWithTemplate(src, target, template string) -> `pandoc $src -o $target --template=$template`
 * [ ] Replace pandoc with a pegn parser
 
