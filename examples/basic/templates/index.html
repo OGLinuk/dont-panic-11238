@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <title>{{ .Title }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store" />
+    <link rel="shortcut icon" href="/static/images/icon.png" type="image/png" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/reset.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+
+<body class="body">
+    <h1><b><i>DONT-PANIC-11238</i></b></h1>
+    <br>
+    {{ .Description }}
+    <br>
+    <br>
+    <main>
+        <p>
+            This page took {{ .TimeComplexity }} to scan.
+            <br>
+            Last scan was {{ .LastExecution }} ago.
+        </p>
+        <b>Total Services Active: {{ .NumActiveServices }}</b>
+        <br>
+        <ul>
+            {{ range .ServiceLinks }}
+            <li>
+                {{ . }}
+            </li>
+            {{ end }}
+        </ul>
+    </main>
+    <br>
+    <br>
+    <footer>
+        <p>
+            (<a href="https://gitlab.com/oglinuk/dont-panic-11238/">Source Code</a>)
+        </p>
+    </footer>
+</body>
+
+</html>
